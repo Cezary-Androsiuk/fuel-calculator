@@ -28,35 +28,22 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:text="Initial PLN value"
-            android:textStyle="bold" />
-
         <EditText
             android:id="@+id/initialPLNValueEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Initial PLN value"
-            android:inputType="numberDecimal" />
+            android:hint="Initial value (PLN)"
+            android:inputType="numberSigned|numberDecimal" />
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="30dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:text="Current fuel amount in tank (in liters)"
-            android:textStyle="bold" />
-
         <EditText
             android:id="@+id/currentFuelAmountEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Fuel in tank (liters)"
             android:inputType="numberDecimal" />
         <!--            android:hint="abc"/>-->
 
@@ -75,13 +62,6 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:text="Time"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,6 +71,7 @@
                 android:id="@+id/timeEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:hint="Time"
                 android:layout_weight="0.85"
                 android:inputType="time" />
 
@@ -113,13 +94,6 @@
             android:layout_width="wrap_content"
             android:layout_height="10dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:text="Date"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,6 +104,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.85"
+                android:hint="Date"
                 android:inputType="date" />
 
             <View
