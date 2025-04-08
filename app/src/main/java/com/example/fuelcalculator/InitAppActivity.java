@@ -106,9 +106,8 @@ public class InitAppActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Nie wywołuj super.onBackPressed() - to zablokuje działanie przycisku cofnięcia
-        // Możesz też dodać własne zachowanie, np. pokazać Toast
-        Toast.makeText(this, "Zamknięcie tej aktywności jest zablokowane", Toast.LENGTH_SHORT).show();
+        /// don't call super.onBackPressed() to disable closing this Activity
+        finishAffinity();
     }
 
     ///  Open while changing the time
@@ -147,7 +146,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     ///  Called while user press Save (initial data)
     public void onSaveInitDataButtonClicked(){
-        m_formValid = true; /// assert - will be changed if needed
+        m_formValid = true; /// assert is valid - will be changed if needed
 
         this.processInitialPLNValue();
 
@@ -157,16 +156,22 @@ public class InitAppActivity extends AppCompatActivity {
 //            Log.d("db", "invalid data cannot save initialization");
 //            return;
 //        }
+
+//        this.closeInitActivity();
     }
 
     private void processInitialPLNValue(){
+        ///  Always valid due to input validation
+//        m_initialPLNValueEditText.setError("invalid initial PLN value");
+//        m_initialPLNValueEditText.requestFocus();
+    }
+
+    private  void processCurrentFuelAmount(){
 
     }
 
     private boolean validateInitialPLNValue(){
         ///  Always true due to input validation
-//        m_initialPLNValueEditText.setError("invalid initial PLN value");
-//        m_initialPLNValueEditText.requestFocus();
         return true;
     }
 
@@ -236,33 +241,7 @@ public class InitAppActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean handleInvalidInitData(){
-        ///  test initial PLN value
-        if(!this.validateInitialPLNValue())
-        {
-            return false;
-        }
 
-        ///  test current fuel amount
-        if(!this.validateCurrentFuelAmount())
-        {
-            return false;
-        }
-
-        ///  test time value
-        if(!this.validateTime())
-        {
-            return false;
-        }
-
-        ///  test date value
-        if(!this.validateDate())
-        {
-            return false;
-        }
-
-        return true;
-    }
 //
 //    public void setTimeFromEditText(EditText editText) {
 //        String timeInput = editText.getText().toString().trim();
@@ -323,7 +302,7 @@ public class InitAppActivity extends AppCompatActivity {
 //    }
 
 
-    public void closeInitActivity(View v){
+    private void closeInitActivity(){
         // add data to return
         finish();
     }
