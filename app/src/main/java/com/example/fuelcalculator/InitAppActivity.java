@@ -146,62 +146,67 @@ public class InitAppActivity extends AppCompatActivity {
 
     ///  Called while user press Save (initial data)
     public void onSaveInitDataButtonClicked(){
-        m_formValid = true; /// assert is valid - will be changed if needed
+        try{
+            this.processInitialPLNValue();
+            this.processCurrentFuelAmount();
+            this.processTimeValue();
+            this.processDateValue();
 
-        this.processInitialPLNValue();
-
-//        ///  check if data are valid
-//        if(!this.handleInvalidInitData())
-//        {
-//            Log.d("db", "invalid data cannot save initialization");
-//            return;
-//        }
-
-//        this.closeInitActivity();
+            // log success
+            this.closeInitActivity();
+        } catch (Exception e) {
+            // log failed
+        }
     }
 
-    private void processInitialPLNValue(){
-        ///  Always valid due to input validation
-//        m_initialPLNValueEditText.setError("invalid initial PLN value");
-//        m_initialPLNValueEditText.requestFocus();
+    private void processInitialPLNValue() throws Exception {
+        String initialPLNValue = m_initialPLNValueEditText.getText().toString().trim();
+
+        if (TextUtils.isEmpty(initialPLNValue)) {
+            m_initialPLNValueEditText.setError("Field cannot be empty");
+            m_initialPLNValueEditText.requestFocus();
+            throw new Exception("empty value");
+            // return;
+        }
+
+        // set data to variable
     }
 
-    private  void processCurrentFuelAmount(){
+    private void processCurrentFuelAmount() throws Exception {
+        String currentFuelAmount = m_currentFuelAmountEditText.getText().toString().trim();
 
+        if (TextUtils.isEmpty(currentFuelAmount)) {
+            m_currentFuelAmountEditText.setError("Field cannot be empty");
+            m_currentFuelAmountEditText.requestFocus();
+            throw new Exception("empty value");
+            // return;
+        }
+
+        // set data to variable
     }
 
-    private boolean validateInitialPLNValue(){
-        ///  Always true due to input validation
-        return true;
-    }
-
-    private boolean validateCurrentFuelAmount(){
-        ///  Always true due to input validation
-//        m_currentFuelAmountEditText.setError("invalid fuel amount in tank");
-//        m_currentFuelAmountEditText.requestFocus();
-        return true;
-    }
-
-    private boolean validateTime(){
+    private void processTimeValue() throws Exception {
         String timeInput = m_dateTime.timeEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(timeInput)) {
             m_dateTime.timeEditText.setError("Field cannot be empty");
             m_dateTime.timeEditText.requestFocus();
-            return false;
+            throw new Exception("empty value");
+            // return;
         }
 
         // expected pattern HH:MM:SS
         if (!timeInput.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
             m_dateTime.timeEditText.setError("invalid time format, expected HH:MM:SS");
             m_dateTime.timeEditText.requestFocus();
-            return false;
+            throw new Exception("invalid format");
+            // return;
         }
 
-        return true;
+        // set data to variable
     }
 
-    private boolean isValidDayForMonth(int year, int month, int day) {
+    static private boolean isValidDayForMonth(int year, int month, int day) {
         if (month == 2) { // February
             boolean isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
             return day <= (isLeapYear ? 29 : 28);
@@ -212,20 +217,22 @@ public class InitAppActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateDate(){
+    private void processDateValue() throws Exception {
         String dateInput = m_dateTime.dateEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(dateInput)) {
             m_dateTime.dateEditText.setError("Field cannot be empty");
             m_dateTime.dateEditText.requestFocus();
-            return false;
+            throw new Exception("empty value");
+            // return;
         }
 
         // expected pattern YYY/MM/DD
         if (!dateInput.matches("^\\d{4}/(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])$")) {
             m_dateTime.dateEditText.setError("invalid date format,\n expected YYYY/MM/DD");
             m_dateTime.dateEditText.requestFocus();
-            return false;
+            throw new Exception("invalid format");
+            // return;
         }
 
         String[] parts = dateInput.split("/");
@@ -233,77 +240,18 @@ public class InitAppActivity extends AppCompatActivity {
         int month = Integer.parseInt(parts[1]);
         int day = Integer.parseInt(parts[2]);
 
-        if (!this.isValidDayForMonth(year, month, day)) {
+        if (!InitAppActivity.isValidDayForMonth(year, month, day)) {
             m_dateTime.dateEditText.setError("invalid day for that month and year");
-            return false;
+            throw new Exception("invalid day for that month");
+            // return;
         }
 
-        return true;
+        // set data to variable
     }
-
-
-//
-//    public void setTimeFromEditText(EditText editText) {
-//        String timeInput = editText.getText().toString().trim();
-//        String[] parts = timeInput.split(":");
-//
-//        if (parts.length == 3) {
-//            try {
-//                m_hour = Integer.parseInt(parts[0]);
-//                m_minute = Integer.parseInt(parts[1]);
-//                m_seconds = Integer.parseInt(parts[2]);
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            throw new IllegalArgumentException("invalid time conversion  HH:MM:SS");
-//        }
-//    }
-//
-//    public boolean parseAndSetDateFromEditText(EditText editText) {
-//        String dateInput = editText.getText().toString().trim();
-//
-//        // 1. Sprawdzenie czy pole nie jest puste
-//        if (TextUtils.isEmpty(dateInput)) {
-//            editText.setError("Wprowadź datę w formacie RRRR/MM/DD");
-//            return false;
-//        }
-//
-//        // 2. Sprawdzenie formatu za pomocą regex
-//        if (!Pattern.matches("^\\d{4}/(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])$", dateInput)) {
-//            editText.setError("Nieprawidłowy format. Wymagany format: RRRR/MM/DD");
-//            return false;
-//        }
-//
-//        // 3. Podział na części i konwersja na liczby
-//        String[] parts = dateInput.split("/");
-//        try {
-//            int year = Integer.parseInt(parts[0]);
-//            int month = Integer.parseInt(parts[1]);
-//            int day = Integer.parseInt(parts[2]);
-//
-//            // 4. Sprawdzenie poprawności dnia dla miesiąca
-//            if (!isValidDayForMonth(year, month, day)) {
-//                editText.setError("Nieprawidłowy dzień dla podanego miesiąca");
-//                return false;
-//            }
-//
-//            // 5. Przypisanie wartości do pól klasy
-//            m_year = year;
-//            m_month = month;
-//            m_day = day;
-//
-//            return true;
-//
-//        } catch (NumberFormatException e) {
-//            editText.setError("Nieprawidłowe wartości liczbowe");
-//            return false;
-//        }
-//    }
-
 
     private void closeInitActivity(){
         // add data to return
+
         finish();
     }
 }
