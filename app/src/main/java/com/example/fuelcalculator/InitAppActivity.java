@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -103,6 +104,13 @@ public class InitAppActivity extends AppCompatActivity {
         m_saveInitDataButton.setOnClickListener(v -> this.onSaveInitDataButtonClicked());
     }
 
+    @Override
+    public void onBackPressed() {
+        // Nie wywołuj super.onBackPressed() - to zablokuje działanie przycisku cofnięcia
+        // Możesz też dodać własne zachowanie, np. pokazać Toast
+        Toast.makeText(this, "Zamknięcie tej aktywności jest zablokowane", Toast.LENGTH_SHORT).show();
+    }
+
     ///  Open while changing the time
     public void openTimeSelector(){
         ///  read necessary data from calendar
@@ -152,7 +160,7 @@ public class InitAppActivity extends AppCompatActivity {
     }
 
     private void processInitialPLNValue(){
-        
+
     }
 
     private boolean validateInitialPLNValue(){
