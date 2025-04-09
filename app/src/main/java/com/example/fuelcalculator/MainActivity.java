@@ -127,10 +127,10 @@ public class MainActivity extends AppCompatActivity {
         int size = 50;
         double[] fromFuels = new double[size];
         for(int i=0; i<size; i++)
-            fromFuels[i] = i* 3.0;
+            fromFuels[size-i-1] = i* 3.0;
         double[] toFuels = new double[size];
         for(int i=0; i<size; i++)
-            toFuels[i] = (i+1)* 3.0;
+            toFuels[size-i-1] = (i+1)* 3.0;
 
         for(int i=0; i<size; i++)
         {
