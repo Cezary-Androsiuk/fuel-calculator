@@ -2,6 +2,7 @@ package com.example.fuelcalculator;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,39 +25,23 @@ import java.util.Locale;
 
 public class InitAppActivity extends AppCompatActivity {
 
-    public class ValidatedTimeStruct{
-        public int hour;
-        public int minute;
-        public int second;
-    }
-
-    public class ValidatedDateStruct{
-        public int year;
-        public int month;
-        public int day;
-    }
-
     public class DateTimeStruct{
         public EditText timeEditText;
         public ImageButton timeSelectButton;
-        public ValidatedTimeStruct validatedTime;
 
         public EditText dateEditText;
         public ImageButton dateSelectButton;
-        public ValidatedDateStruct validatedDate;
     }
 
     EditText m_initialPLNValueEditText;
-    double m_validatedInitialPLNValue = 0.0;
     EditText m_currentFuelAmountEditText;
-    double m_validatedCurrentFuelAmount = 0.0;
     DateTimeStruct m_dateTime;
     Button m_saveInitDataButton;
 
+    InitDataSet m_validatedDataSet = new InitDataSet();
+
     final String c_timePattern = "HH:mm:ss";
     final String c_datePattern = "yyyy/MM/dd";
-
-    boolean m_formValid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +56,9 @@ public class InitAppActivity extends AppCompatActivity {
 
         ///  assign initial PLN and current fuel views to variables
         m_initialPLNValueEditText = (EditText) findViewById(R.id.initialPLNValueEditText);
+        m_initialPLNValueEditText.setText("0.0");
         m_currentFuelAmountEditText = (EditText) findViewById(R.id.currentFuelAmountEditText);
+        m_currentFuelAmountEditText.setText("0.0");
 
 
 
@@ -137,7 +124,8 @@ public class InitAppActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 InitAppActivity.this,
                 (view, year, month, dayOfMonth) -> {
-                    String selectedDate = year + "/" + (month + 1) + "/" + dayOfMonth;
+                    String selectedDate = String.format(Locale.getDefault(),
+                            "%04d/%02d/%02d", year, month + 1, dayOfMonth);
                     m_dateTime.dateEditText.setText(selectedDate);
                 }, currentYear, currentMonth, currentDayOfM
         );
@@ -161,6 +149,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     private void processInitialPLNValue() throws Exception {
         String initialPLNValue = m_initialPLNValueEditText.getText().toString().trim();
+        Log.i("INITIAL_CONFIGURATION", "initialPLNValue1 value: " + initialPLNValue);
 
         if (TextUtils.isEmpty(initialPLNValue)) {
             m_initialPLNValueEditText.setError("Field cannot be empty");
@@ -168,12 +157,28 @@ public class InitAppActivity extends AppCompatActivity {
             throw new Exception("empty value");
             // return;
         }
+        Log.i("INITIAL_CONFIGURATION", "initialPLNValue2 value: " + initialPLNValue);
+
+        // parse String to double
+        double parsedValue;
+        try {
+            Log.i("INITIAL_CONFIGURATION", "initialPLNValue3 value: " + initialPLNValue);
+            String normalizedInput = initialPLNValue.replace(",", ".");
+            parsedValue = Double.parseDouble(normalizedInput);
+            Log.i("INITIAL_CONFIGURATION", "initialPLNValue4 value: " + initialPLNValue);
+        } catch (NumberFormatException e) {
+            m_initialPLNValueEditText.setError("Cannot parse value to double");
+            throw new Exception("parse to double failed");
+        }
+        Log.i("INITIAL_CONFIGURATION", "initialPLNValue5 value: " + initialPLNValue);
 
         // set data to variable
+        m_validatedDataSet.validatedInitialPLNValue = parsedValue;
     }
 
     private void processCurrentFuelAmount() throws Exception {
         String currentFuelAmount = m_currentFuelAmountEditText.getText().toString().trim();
+        Log.i("INITIAL_CONFIGURATION", "currentFuelAmount value: " + currentFuelAmount);
 
         if (TextUtils.isEmpty(currentFuelAmount)) {
             m_currentFuelAmountEditText.setError("Field cannot be empty");
@@ -182,11 +187,23 @@ public class InitAppActivity extends AppCompatActivity {
             // return;
         }
 
+        // parse String to double
+        double parsedValue;
+        try {
+            String normalizedInput = currentFuelAmount.replace(",", ".");
+            parsedValue = Double.parseDouble(normalizedInput);
+        } catch (NumberFormatException e) {
+            m_currentFuelAmountEditText.setError("Cannot parse value to double");
+            throw new Exception("parse to double failed");
+        }
+
         // set data to variable
+        m_validatedDataSet.validatedCurrentFuelAmount = parsedValue;
     }
 
     private void processTimeValue() throws Exception {
         String timeInput = m_dateTime.timeEditText.getText().toString().trim();
+        Log.i("INITIAL_CONFIGURATION", "timeInput value: " + timeInput);
 
         if (TextUtils.isEmpty(timeInput)) {
             m_dateTime.timeEditText.setError("Field cannot be empty");
@@ -203,7 +220,22 @@ public class InitAppActivity extends AppCompatActivity {
             // return;
         }
 
+        // parse String to ints
+        String[] parts = timeInput.split(":");
+        int h, m, s;
+        try {
+            h = Integer.parseInt(parts[0]);
+            m = Integer.parseInt(parts[1]);
+            s = Integer.parseInt(parts[2]);
+        } catch (NumberFormatException e) {
+            m_dateTime.timeEditText.setError("Cannot parse value to three ints");
+            throw new Exception("parse to 3 ints failed");
+        }
+
         // set data to variable
+        m_validatedDataSet.hour = h;
+        m_validatedDataSet.minute = m;
+        m_validatedDataSet.second = s;
     }
 
     static private boolean isValidDayForMonth(int year, int month, int day) {
@@ -219,6 +251,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     private void processDateValue() throws Exception {
         String dateInput = m_dateTime.dateEditText.getText().toString().trim();
+        Log.i("INITIAL_CONFIGURATION", "dateInput value: " + dateInput);
 
         if (TextUtils.isEmpty(dateInput)) {
             m_dateTime.dateEditText.setError("Field cannot be empty");
@@ -235,11 +268,19 @@ public class InitAppActivity extends AppCompatActivity {
             // return;
         }
 
+        // parse String to ints
         String[] parts = dateInput.split("/");
-        int year = Integer.parseInt(parts[0]);
-        int month = Integer.parseInt(parts[1]);
-        int day = Integer.parseInt(parts[2]);
+        int year, month, day;
+        try {
+            year = Integer.parseInt(parts[0]);
+            month = Integer.parseInt(parts[1]);
+            day = Integer.parseInt(parts[2]);
+        } catch (NumberFormatException e) {
+            m_dateTime.dateEditText.setError("Cannot parse value to three ints");
+            throw new Exception("parse to 3 ints failed");
+        }
 
+        // check if February does not have 31 days
         if (!InitAppActivity.isValidDayForMonth(year, month, day)) {
             m_dateTime.dateEditText.setError("invalid day for that month and year");
             throw new Exception("invalid day for that month");
@@ -247,11 +288,21 @@ public class InitAppActivity extends AppCompatActivity {
         }
 
         // set data to variable
+        m_validatedDataSet.year = year;
+        m_validatedDataSet.month = month;
+        m_validatedDataSet.day = day;
     }
 
     private void closeInitActivity(){
         // add data to return
 
+        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra("FLOAT_VALUE_1", floatValue1);
+//        intent.putExtra("FLOAT_VALUE_2", floatValue2);
+//        intent.putExtra("DATA_CLASS_1", data1);
+//        intent.putExtra("DATA_CLASS_2", data2);
+
+//        startActivity(intent);
         finish();
     }
 }

@@ -1,0 +1,6 @@
+4 sure:
+initial data for Initial value PLN
+initial data for fuel tank
+
+maybe:
+exit app while press back in MainActivity
