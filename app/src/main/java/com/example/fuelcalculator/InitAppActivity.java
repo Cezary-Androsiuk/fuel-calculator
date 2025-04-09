@@ -296,13 +296,10 @@ public class InitAppActivity extends AppCompatActivity {
     private void closeInitActivity(){
         // add data to return
 
-        Intent intent = new Intent(this, MainActivity.class);
-//        intent.putExtra("FLOAT_VALUE_1", floatValue1);
-//        intent.putExtra("FLOAT_VALUE_2", floatValue2);
-//        intent.putExtra("DATA_CLASS_1", data1);
-//        intent.putExtra("DATA_CLASS_2", data2);
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("INIT_DATA_SET", m_validatedDataSet); // class requires serializable
 
-//        startActivity(intent);
+        setResult(RESULT_OK, returnIntent);
         finish();
     }
 }

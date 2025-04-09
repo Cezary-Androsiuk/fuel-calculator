@@ -2,7 +2,7 @@ package com.example.fuelcalculator;
 
 import java.io.Serializable;
 
-public class InitDataSet  {
+public class InitDataSet implements Serializable {
 
     double validatedInitialPLNValue = 0.0;
     double validatedCurrentFuelAmount = 0.0;
