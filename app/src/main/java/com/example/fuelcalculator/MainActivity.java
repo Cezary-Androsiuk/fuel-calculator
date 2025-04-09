@@ -44,23 +44,30 @@ public class MainActivity extends AppCompatActivity {
                             if(data == null)
                             {
                                 Log.i("MAIN_ACTIVITY_LOGS", "data is null");
+
+                                /// IDK WHAT TO DO HERE, SEAMS LIKE A DEAD END WHERE APP CRASH
+                                finishAffinity(); // Closes all activities and ends the application process
+                                System.exit(0); // exit to ensure that there will be exit if something fails
                                 return;
                             }
 
-                            m_initDataSet = data.getParcelableExtra("INIT_DATA_SET");
+                            m_initDataSet = (InitDataSet) data.getSerializableExtra("INIT_DATA_SET");
+                            onInitAppFinished();
                         }
                     }
                 });
 
         Intent intent = new Intent(this, InitAppActivity.class);
         initAppActivityResultLauncher.launch(intent);
-
-
     }
 
     @Override
     public void onBackPressed() {
         finishAffinity(); // Closes all activities and ends the application process
         System.exit(0); // exit to ensure that there will be exit if something fails
+    }
+
+    private void onInitAppFinished(){
+        Log.i("MAIN_ACTIVITY_LOGS", "m_initDataSet: " + m_initDataSet);
     }
 }
