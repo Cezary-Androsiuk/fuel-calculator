@@ -149,7 +149,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     private void processInitialPLNValue() throws Exception {
         String initialPLNValue = m_initialPLNValueEditText.getText().toString().trim();
-        Log.i("INITIAL_CONFIGURATION", "initialPLNValue1 value: " + initialPLNValue);
+        Log.i("INIT_APP_ACTIVITY_LOGS", "initialPLNValue1 value: " + initialPLNValue);
 
         if (TextUtils.isEmpty(initialPLNValue)) {
             m_initialPLNValueEditText.setError("Field cannot be empty");
@@ -157,20 +157,16 @@ public class InitAppActivity extends AppCompatActivity {
             throw new Exception("empty value");
             // return;
         }
-        Log.i("INITIAL_CONFIGURATION", "initialPLNValue2 value: " + initialPLNValue);
 
         // parse String to double
         double parsedValue;
         try {
-            Log.i("INITIAL_CONFIGURATION", "initialPLNValue3 value: " + initialPLNValue);
             String normalizedInput = initialPLNValue.replace(",", ".");
             parsedValue = Double.parseDouble(normalizedInput);
-            Log.i("INITIAL_CONFIGURATION", "initialPLNValue4 value: " + initialPLNValue);
         } catch (NumberFormatException e) {
             m_initialPLNValueEditText.setError("Cannot parse value to double");
             throw new Exception("parse to double failed");
         }
-        Log.i("INITIAL_CONFIGURATION", "initialPLNValue5 value: " + initialPLNValue);
 
         // set data to variable
         m_validatedDataSet.validatedInitialPLNValue = parsedValue;
@@ -178,7 +174,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     private void processCurrentFuelAmount() throws Exception {
         String currentFuelAmount = m_currentFuelAmountEditText.getText().toString().trim();
-        Log.i("INITIAL_CONFIGURATION", "currentFuelAmount value: " + currentFuelAmount);
+        Log.i("INIT_APP_ACTIVITY_LOGS", "currentFuelAmount value: " + currentFuelAmount);
 
         if (TextUtils.isEmpty(currentFuelAmount)) {
             m_currentFuelAmountEditText.setError("Field cannot be empty");
@@ -203,7 +199,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     private void processTimeValue() throws Exception {
         String timeInput = m_dateTime.timeEditText.getText().toString().trim();
-        Log.i("INITIAL_CONFIGURATION", "timeInput value: " + timeInput);
+        Log.i("INIT_APP_ACTIVITY_LOGS", "timeInput value: " + timeInput);
 
         if (TextUtils.isEmpty(timeInput)) {
             m_dateTime.timeEditText.setError("Field cannot be empty");
@@ -251,7 +247,7 @@ public class InitAppActivity extends AppCompatActivity {
 
     private void processDateValue() throws Exception {
         String dateInput = m_dateTime.dateEditText.getText().toString().trim();
-        Log.i("INITIAL_CONFIGURATION", "dateInput value: " + dateInput);
+        Log.i("INIT_APP_ACTIVITY_LOGS", "dateInput value: " + dateInput);
 
         if (TextUtils.isEmpty(dateInput)) {
             m_dateTime.dateEditText.setError("Field cannot be empty");

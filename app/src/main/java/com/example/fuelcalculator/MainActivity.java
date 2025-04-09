@@ -2,8 +2,13 @@ package com.example.fuelcalculator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -12,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     final public static String m_dataFilePath = "./data.txt";
+
+    InitDataSet m_initDataSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +33,29 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // start InitAppActivity
+        ActivityResultLauncher<Intent> initAppActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == RESULT_OK) {
+                            Intent data = o.getData();
+                            if(data == null)
+                            {
+                                Log.i("MAIN_ACTIVITY_LOGS", "data is null");
+                                return;
+                            }
+
+                            m_initDataSet = data.getParcelableExtra("INIT_DATA_SET");
+                        }
+                    }
+                });
+
         Intent intent = new Intent(this, InitAppActivity.class);
-        startActivityForResult(intent, 1);
+        initAppActivityResultLauncher.launch(intent);
+
+
     }
 
     @Override
