@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -30,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<FuelRecordModel> m_fuelRecordModels = new ArrayList<>();
 
+    ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
+    ImageButton m_settingsButton;
+
     /// NOT WORKS
 //    // prevents restarting while device changed position form vertical to horizontal
 //    boolean m_activityInitialized = false;
@@ -51,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
         // if I only can handle double start InitAppActivity I will deal with something like "good user experience" XD
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        this.createSettingsActivityLoader();
+
+        m_settingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        m_settingsButton.setOnClickListener(v -> this.openSettings());
+
         /// NOT WORKS
 //        if(!m_activityInitialized)
 //        {
@@ -70,6 +82,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void createSettingsActivityLoader() {
+         m_settingsActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == SettingsActivity.RESULT_ERASE_APP_MEMORY)
+                        {
+                            eraseAppMemory();
+                        }
+                        else if(o.getResultCode() == RESULT_OK) {
+                            ///  data not required here
+                            // Intent data = o.getData();
+                            // if(data == null)
+
+                            ///  do nothing
+                        }
+                        else
+                        {
+                            ///  do nothing
+                        }
+                    }
+                });
+
+    }
+
     @Override
     @SuppressLint("MissingSuperCall")
     public void onBackPressed() {
@@ -84,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startInitAppActivity() {
+        Log.i("MAIN_ACTIVITY_LOGS", "startInitAppActivity");
         ActivityResultLauncher<Intent> initAppActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -112,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onInitAppFinished(){
+        Log.i("MAIN_ACTIVITY_LOGS", "onInitAppFinished");
         Log.i("MAIN_ACTIVITY_LOGS", "m_initDataSet: " + m_initDataSet);
         // transform initDataSet to something useful
 
@@ -119,10 +159,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readDataFile(){
+        Log.i("MAIN_ACTIVITY_LOGS", "readDataFile");
 
     }
 
     private void startAlreadyInitializedApplication(){
+        Log.i("MAIN_ACTIVITY_LOGS", "startAlreadyInitializedApplication");
+
         ///  temporary create data to display
         int size = 50;
         double[] fromFuels = new double[size];
@@ -143,5 +186,27 @@ public class MainActivity extends AppCompatActivity {
                 new FuelRecordRecyclerViewAdapter(this, m_fuelRecordModels);
         mainRecyclerView.setAdapter(recyclerAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
+    }
+
+    private void openSettings(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openSettings");
+
+        Intent intent = new Intent(this, SettingsActivity.class);
+        m_settingsActivityResultLauncher.launch(intent);
+    }
+
+    private void eraseAppMemory(){
+        ///  clear list of fuel records
+
+        ///  delete data file
+
+        ///  restart application to commit changes
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finishAffinity();
+        }, 300); // 300ms delay helps in avoiding errors
+
     }
 }
