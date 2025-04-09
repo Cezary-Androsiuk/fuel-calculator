@@ -29,4 +29,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, InitAppActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity(); // Closes all activities and ends the application process
+        System.exit(0); // exit to ensure that there will be exit if something fails
+    }
 }
