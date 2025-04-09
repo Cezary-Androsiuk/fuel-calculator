@@ -1,8 +1,10 @@
 package com.example.fuelcalculator;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,8 +45,13 @@ public class InitAppActivity extends AppCompatActivity {
     final String c_timePattern = "HH:mm:ss";
     final String c_datePattern = "yyyy/MM/dd";
 
+    // prevents restarting while device changed position form vertical to horizontal
+    boolean m_activityInitialized = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("INIT_APP_ACTIVITY_LOGS", "onCreate");
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_init_app);
@@ -54,11 +61,15 @@ public class InitAppActivity extends AppCompatActivity {
             return insets;
         });
 
+        // remove later - after adding vertically scrollable interface
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        if(m_activityInitialized)
+            return;
+
         ///  assign initial PLN and current fuel views to variables
         m_initialPLNValueEditText = (EditText) findViewById(R.id.initialPLNValueEditText);
-        m_initialPLNValueEditText.setText("0.0");
         m_currentFuelAmountEditText = (EditText) findViewById(R.id.currentFuelAmountEditText);
-        m_currentFuelAmountEditText.setText("0.0");
 
 
 
@@ -89,12 +100,20 @@ public class InitAppActivity extends AppCompatActivity {
         m_saveInitDataButton = (Button) findViewById(R.id.saveInitDataButton);
         ///  connect onClick function with save button
         m_saveInitDataButton.setOnClickListener(v -> this.onSaveInitDataButtonClicked());
+
+
+        m_initialPLNValueEditText.setText("0.0"); /// DEBUG
+        m_currentFuelAmountEditText.setText("0.0"); /// DEBUG
+        m_saveInitDataButton.callOnClick(); /// DEBUG
+
+        m_activityInitialized = true;
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     public void onBackPressed() {
         /// don't call super.onBackPressed() to disable closing this Activity
-        finishAffinity();
+         finishAffinity();
     }
 
     ///  Open while changing the time
