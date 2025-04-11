@@ -1,12 +1,16 @@
 package com.androsiukcezary.fuelcalculator;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
@@ -74,11 +78,22 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 readDataFile();
-                startAlreadyInitializedApplication();
+                useDataToStartAlreadyInitializedApplication();
             }
         }
     }
 
+    @Override
+    @SuppressLint("MissingSuperCall")
+    public void onBackPressed() {
+        finishAffinity(); // Closes all activities and ends the application process
+        System.exit(0); // exit to ensure that there will be exit if something fails
+    }
+
+
+    ///
+    /// SETTINGS ACTIVITY
+    ///
     private void createSettingsActivityLoader() {
          m_settingsActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -105,12 +120,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    @SuppressLint("MissingSuperCall")
-    public void onBackPressed() {
-        finishAffinity(); // Closes all activities and ends the application process
-        System.exit(0); // exit to ensure that there will be exit if something fails
+    private void openSettings(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openSettings");
+
+        Intent intent = new Intent(this, SettingsActivity.class);
+        m_settingsActivityResultLauncher.launch(intent);
     }
+
+    private void eraseAppMemory(){
+        ///  clear list of fuel records
+
+        ///  delete data file
+
+        ///  restart application to commit changes
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finishAffinity();
+        }, 300); // 300ms delay helps in avoiding errors
+
+    }
+
+    ///
+    /// INIT APP ACTIVITY
+    ///
 
     private boolean isDataFileExit(){
         // check if data file exit
@@ -152,16 +186,23 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MAIN_ACTIVITY_LOGS", "m_initDataSet: " + m_initDataSet);
         // transform initDataSet to something useful
 
-        this.startAlreadyInitializedApplication();
+        ///  readDataFile not required all data are in memory
+        this.useDataToStartAlreadyInitializedApplication();
     }
 
-    private void readDataFile(){
+
+    ///
+    /// MAIN ACTIVITY
+    ///
+    private void readDataFile(){ ///  called before useDataToStartAlreadyInitializedApplication()
         Log.i("MAIN_ACTIVITY_LOGS", "readDataFile");
 
     }
 
-    private void startAlreadyInitializedApplication(){
-        Log.i("MAIN_ACTIVITY_LOGS", "startAlreadyInitializedApplication");
+    private void useDataToStartAlreadyInitializedApplication(){
+        Log.i("MAIN_ACTIVITY_LOGS", "useDataToStartAlreadyInitializedApplication");
+
+
 
         ///  temporary create data to display
         int size = 50;
@@ -185,25 +226,62 @@ public class MainActivity extends AppCompatActivity {
         mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
     }
 
-    private void openSettings(){
-        Log.i("MAIN_ACTIVITY_LOGS", "openSettings");
+    public void addNewRecord(){
+        ///  Show New Record Dialog
+        Dialog newRecordDialog = new Dialog(this);
+        newRecordDialog.setContentView(R.layout.add_new_record_dialog_box);
+        newRecordDialog.getWindow().setLayout(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newRecordDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_box_background));
+        newRecordDialog.setCancelable(true);
+        newRecordDialog.show();
 
-        Intent intent = new Intent(this, SettingsActivity.class);
-        m_settingsActivityResultLauncher.launch(intent);
+        ///  New Trip Recordd Button
+        Button tripButton = (Button) newRecordDialog.findViewById(R.id.btnDialogTrip);
+        tripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+                addNewTripRecord();
+            }
+        });
+        ///  New Refueling Record Button
+        Button refuelingButton = (Button) newRecordDialog.findViewById(R.id.btnDialogRefueling);
+        refuelingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+                addNewRefuelingRecord();
+            }
+        });
+        ///  New Payment Record Button
+        Button paymentButton = (Button) newRecordDialog.findViewById(R.id.btnDialogPayment);
+        paymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+                addNewPaymentRecord();
+            }
+        });
+        ///  Cancel Adding New Record Button
+        Button cancelButton = (Button) newRecordDialog.findViewById(R.id.btnDialogCancelAddingRecord);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+            }
+        });
     }
 
-    private void eraseAppMemory(){
-        ///  clear list of fuel records
+    private void addNewTripRecord(){
 
-        ///  delete data file
+    }
 
-        ///  restart application to commit changes
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finishAffinity();
-        }, 300); // 300ms delay helps in avoiding errors
+    private void addNewRefuelingRecord(){
+
+    }
+
+    private void addNewPaymentRecord(){
 
     }
 }

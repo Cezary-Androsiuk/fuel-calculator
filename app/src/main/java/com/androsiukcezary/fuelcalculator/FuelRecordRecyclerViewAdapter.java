@@ -1,10 +1,12 @@
 package com.androsiukcezary.fuelcalculator;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +42,11 @@ public class FuelRecordRecyclerViewAdapter
         LayoutInflater inflater = LayoutInflater.from(m_context);
         if (viewType == TYPE_HEADER) {
             View headerView = inflater.inflate(R.layout.fuel_record_header_row, parent, false);
+
+            Button addNewRecordButton = headerView.findViewById(R.id.addNewRecordButton);
+            MainActivity mainActivity = (MainActivity) m_context;
+            addNewRecordButton.setOnClickListener(v -> mainActivity.addNewRecord());
+
             return new HeaderViewHolder(headerView);
         } else {
             View view = inflater.inflate(R.layout.fuel_record_row, parent, false);

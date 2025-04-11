@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#2C2B33"
+    app:cardCornerRadius="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Add New Record"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textView1"
+            app:layout_constraintStart_toStartOf="@+id/textView1"
+            app:layout_constraintTop_toBottomOf="@+id/textView1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogTrip"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="Trip"
+                app:icon="@drawable/baseline_calendar_month_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogRefueling"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="Refueling"
+                app:icon="@drawable/baseline_calendar_month_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogPayment"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="Payment"
+                app:icon="@drawable/baseline_calendar_month_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogCancelAddingRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginTop="20dp"
+                android:text="Cancel"/>
+
+<!--            app:iconGravity="end"-->
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

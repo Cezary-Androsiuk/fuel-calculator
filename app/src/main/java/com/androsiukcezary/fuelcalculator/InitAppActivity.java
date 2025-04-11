@@ -33,6 +33,8 @@ public class InitAppActivity extends AppCompatActivity {
         public ImageButton dateSelectButton;
     }
 
+    static final boolean m_disableActivityForDebug = true;
+
     EditText m_initialPLNValueEditText;
     EditText m_currentFuelAmountEditText;
     DateTimeStruct m_dateTime;
@@ -99,10 +101,12 @@ public class InitAppActivity extends AppCompatActivity {
         ///  connect onClick function with save button
         m_saveInitDataButton.setOnClickListener(v -> this.onSaveInitDataButtonClicked());
 
-
-        m_initialPLNValueEditText.setText("0.0"); /// DEBUG
-        m_currentFuelAmountEditText.setText("0.0"); /// DEBUG
-        m_saveInitDataButton.callOnClick(); /// DEBUG
+        if(m_disableActivityForDebug)
+        {
+            m_initialPLNValueEditText.setText("0.0"); /// DEBUG
+            m_currentFuelAmountEditText.setText("0.0"); /// DEBUG
+            m_saveInitDataButton.callOnClick(); /// DEBUG
+        }
 
         m_activityInitialized = true;
     }
