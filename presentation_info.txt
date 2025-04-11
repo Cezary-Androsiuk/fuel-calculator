@@ -1,0 +1,4 @@
+1. w pliku build.gradle.kts zmienić ID w android -> defaultConfig -> androidID 
+2. w pliku AndroidManifest.xml trzymając ctrl kilknąć lewym przyciskiem myszy na text w android:label, tj. @string/app_name i dodać UWB przed nazwą wewnątrz innego pliku co się otworzył
+
+tak przeprowadzona operacja pozwoli utworzyć nową aplikację z nową nazwą specjalnie by móc ją przedstawić bez konieczności resetowania danych

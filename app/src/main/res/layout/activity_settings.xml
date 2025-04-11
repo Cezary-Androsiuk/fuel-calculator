@@ -78,15 +78,79 @@
             android:text="Export Application Data" />
 
         <View
-            android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="30dp" />
-
         <Button
             android:id="@+id/importApplicationDataButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Import Application Data" />
+
+        <LinearLayout
+            android:id="@+id/textStuffLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="28dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="Test Stuff"
+                android:textSize="20sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <Button
+                android:id="@+id/printPWDButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Print PWD" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <Button
+                android:id="@+id/addFileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add File" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <Button
+                android:id="@+id/deleteFileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete File" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <TextView
+                android:id="@+id/fileExistStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:text="IDK if file exit..."/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

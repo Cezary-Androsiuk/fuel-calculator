@@ -104,17 +104,14 @@ public class MainActivity extends AppCompatActivity {
                         {
                             eraseAppMemory();
                         }
-                        else if(o.getResultCode() == RESULT_OK) {
-                            ///  data not required here
-                            // Intent data = o.getData();
-                            // if(data == null)
-
-                            ///  do nothing
-                        }
-                        else
-                        {
-                            ///  do nothing
-                        }
+//                        else if(o.getResultCode() == RESULT_OK)
+//                        {
+//                            ///  do nothing
+//                        }
+//                        else
+//                        {
+//                            ///  do nothing
+//                        }
                     }
                 });
 
