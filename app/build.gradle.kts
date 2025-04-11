@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.fuelcalculator"
+    namespace = "com.androsiukcezary.fuelcalculator"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.fuelcalculator"
+        applicationId = "com.androsiukcezary.fuelcalculator"
         minSdk = 30
         targetSdk = 35
         versionCode = 1

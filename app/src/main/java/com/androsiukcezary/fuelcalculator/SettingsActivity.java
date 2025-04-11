@@ -1,10 +1,8 @@
-package com.example.fuelcalculator;
+package com.androsiukcezary.fuelcalculator;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +14,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     static public final int RESULT_ERASE_APP_MEMORY = 38554;
 
+    ImageButton m_closeSettingsButton;
     Button m_eraseAppMemoryButton;
 
     @Override
@@ -29,12 +28,21 @@ public class SettingsActivity extends AppCompatActivity {
             return insets;
         });
 
+        m_closeSettingsButton = (ImageButton) findViewById(R.id.closeSettingsButton);
+        m_closeSettingsButton.setOnClickListener(v -> this.closeSettings());
+
+
         m_eraseAppMemoryButton = (Button) findViewById(R.id.eraseApplicationMemoryButton);
         m_eraseAppMemoryButton.setOnClickListener(v -> this.closeWithEraseAppMemorySignal());
     }
 
     private void closeWithEraseAppMemorySignal(){
         setResult(RESULT_ERASE_APP_MEMORY);
+        finish();
+    }
+
+    private void closeSettings(){
+        setResult(RESULT_OK);
         finish();
     }
 }

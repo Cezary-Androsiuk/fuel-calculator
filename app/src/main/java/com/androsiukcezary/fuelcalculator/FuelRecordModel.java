@@ -1,4 +1,4 @@
-package com.example.fuelcalculator;
+package com.androsiukcezary.fuelcalculator;
 
 public class FuelRecordModel {
 

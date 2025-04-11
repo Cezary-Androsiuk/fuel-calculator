@@ -1,4 +1,4 @@
-package com.example.fuelcalculator;
+package com.androsiukcezary.fuelcalculator;
 
 import android.annotation.SuppressLint;
 

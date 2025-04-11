@@ -1,4 +1,4 @@
-package com.example.fuelcalculator;
+package com.androsiukcezary.fuelcalculator;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -8,11 +8,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,10 +99,10 @@ public class InitAppActivity extends AppCompatActivity {
         ///  connect onClick function with save button
         m_saveInitDataButton.setOnClickListener(v -> this.onSaveInitDataButtonClicked());
 
-//
-//        m_initialPLNValueEditText.setText("0.0"); /// DEBUG
-//        m_currentFuelAmountEditText.setText("0.0"); /// DEBUG
-//        m_saveInitDataButton.callOnClick(); /// DEBUG
+
+        m_initialPLNValueEditText.setText("0.0"); /// DEBUG
+        m_currentFuelAmountEditText.setText("0.0"); /// DEBUG
+        m_saveInitDataButton.callOnClick(); /// DEBUG
 
         m_activityInitialized = true;
     }
