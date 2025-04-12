@@ -66,12 +66,33 @@
                 android:layout_height="40dp" />
 
             <EditText
-                android:id="@+id/currentFuelEditText"
+                android:id="@+id/refueledQuantityEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Current Fuel (liters)"
+                android:hint="Refueled Quantity (liters)"
+                android:inputType="numberDecimal" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp" />
+
+            <EditText
+                android:id="@+id/fuelPriceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Fuel Price (PLN)"
                 android:inputType="numberSigned|numberDecimal" />
 
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp" />
+
+            <CheckBox
+                android:id="@+id/otherCarUserPaysCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Other Car User Pays" />
 
             <View
                 android:layout_width="wrap_content"

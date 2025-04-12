@@ -66,10 +66,10 @@
                 android:layout_height="40dp" />
 
             <EditText
-                android:id="@+id/currentFuelEditText"
+                android:id="@+id/moneyPaidEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Current Fuel (liters)"
+                android:hint="Money Paid (PLN)"
                 android:inputType="numberSigned|numberDecimal" />
 
 
