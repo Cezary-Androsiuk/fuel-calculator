@@ -303,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
     /// New Record Activities
     ///
     private void createAddNewStartTripActivityLoader(){
+        Log.i("MAIN_ACTIVITY_LOGS", "createAddNewStartTripActivityLoader");
         m_addNewStartTripActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -320,9 +321,10 @@ public class MainActivity extends AppCompatActivity {
                                 System.exit(0); // exit to ensure that there will be exit if something fails
                                 return;
                             }
-                            data.getSerializableExtra("");
+                            double currentFuel = data.getDoubleExtra("CURRENT_FUEL", -1.0);
+                            TimeDateDataSet timeDataDataSet = (TimeDateDataSet) data.getSerializableExtra("TIME_DATA_DATA_SET");
 
-                            addNewStartTripRecord();
+                            addNewStartTripRecord(currentFuel, timeDataDataSet);
                         }
                         else if(o.getResultCode() == RESULT_CANCELED)
                         {
@@ -336,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
     private void createAddNewEndTripActivityLoader(){
+        Log.i("MAIN_ACTIVITY_LOGS", "createAddNewEndTripActivityLoader");
         m_addNewEndTripActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -353,9 +356,10 @@ public class MainActivity extends AppCompatActivity {
                                 System.exit(0); // exit to ensure that there will be exit if something fails
                                 return;
                             }
-                            data.getSerializableExtra("");
+                            double currentFuel = data.getDoubleExtra("CURRENT_FUEL", -1.0);
+                            TimeDateDataSet timeDataDataSet = (TimeDateDataSet) data.getSerializableExtra("TIME_DATA_DATA_SET");
 
-                            addNewEndTripRecord();
+                            addNewEndTripRecord(currentFuel, timeDataDataSet);
                         }
                         else if(o.getResultCode() == RESULT_CANCELED)
                         {
@@ -369,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
     private void createAddNewRefuelingActivityLoader(){
+        Log.i("MAIN_ACTIVITY_LOGS", "createAddNewRefuelingActivityLoader");
         m_addNewRefuelingActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -402,6 +407,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
     private void createAddNewPaymentActivityLoader(){
+        Log.i("MAIN_ACTIVITY_LOGS", "createAddNewPaymentActivityLoader");
         m_addNewPayemntActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -463,12 +469,16 @@ public class MainActivity extends AppCompatActivity {
         m_addNewPayemntActivityResultLauncher.launch(intent);
     }
 
-    private void addNewStartTripRecord(){
+    private void addNewStartTripRecord(double currentFuel, TimeDateDataSet timeDateDataSet){
+        Log.i("MAIN_ACTIVITY_LOGS", "addNewStartTripRecord");
+        Log.i("MAIN_ACTIVITY_LOGS", "addNewStartTripRecord: " + Double.toString(currentFuel) +", " + timeDateDataSet);
 
         this.m_tripStarted = true;
     }
 
-    private void addNewEndTripRecord(){
+    private void addNewEndTripRecord(double currentFuel, TimeDateDataSet timeDateDataSet){
+        Log.i("MAIN_ACTIVITY_LOGS", "addNewEndTripRecord");
+        Log.i("MAIN_ACTIVITY_LOGS", "addNewEndTripRecord: " + Double.toString(currentFuel) +", " + timeDateDataSet);
 
         this.m_tripStarted = false;
     }

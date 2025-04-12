@@ -25,14 +25,6 @@ import java.util.Locale;
 
 public class InitAppActivity extends AppCompatActivity {
 
-    public class DateTimeStruct{
-        public EditText timeEditText;
-        public ImageButton timeSelectButton;
-
-        public EditText dateEditText;
-        public ImageButton dateSelectButton;
-    }
-
     static final boolean m_disableActivityForDebug = true;
 
     EditText m_initialPLNValueEditText;
@@ -41,9 +33,6 @@ public class InitAppActivity extends AppCompatActivity {
     Button m_saveInitDataButton;
 
     InitDataSet m_validatedDataSet = new InitDataSet();
-
-    final String c_timePattern = "HH:mm:ss";
-    final String c_datePattern = "yyyy/MM/dd";
 
     // prevents restarting while device changed position form vertical to horizontal
     boolean m_activityInitialized = false;
@@ -71,29 +60,14 @@ public class InitAppActivity extends AppCompatActivity {
         m_initialPLNValueEditText = (EditText) findViewById(R.id.initialPLNValueEditText);
         m_currentFuelAmountEditText = (EditText) findViewById(R.id.currentFuelAmountEditText);
 
-
-
-        ///  create structure and assign views to them
-        m_dateTime = new DateTimeStruct();
-        m_dateTime.timeEditText = (EditText) findViewById(R.id.timeEditText);
-        m_dateTime.timeSelectButton = (ImageButton) findViewById(R.id.timeSelectButton);
-        m_dateTime.dateEditText = (EditText) findViewById(R.id.dateEditText);
-        m_dateTime.dateSelectButton = (ImageButton) findViewById(R.id.dateSelectButton);
-
-        ///  assign initial time
-        SimpleDateFormat timeFormat = new SimpleDateFormat(c_timePattern, Locale.getDefault());
-        String currentTime = timeFormat.format(new Date());
-        m_dateTime.timeEditText.setText(currentTime);
-        ///  connect onClick function with button
-        m_dateTime.timeSelectButton.setOnClickListener(v -> this.openTimeSelector());
-
-        ///  assign initial date
-        SimpleDateFormat dateFormat = new SimpleDateFormat(c_datePattern, Locale.getDefault());
-        String currentDate = dateFormat.format(new Date());
-        m_dateTime.dateEditText.setText(currentDate);
-        ///  connect onClick function with button
-        m_dateTime.dateSelectButton.setOnClickListener(v -> this.openDateSelector());
-
+        ///  create date time structure and assign views to them
+        m_dateTime = new DateTimeStruct(
+                this,
+                findViewById(R.id.timeEditText),
+                findViewById(R.id.timeSelectButton),
+                findViewById(R.id.dateEditText),
+                findViewById(R.id.dateSelectButton)
+        );
 
 
         ///  assign save init button to variable
@@ -118,57 +92,23 @@ public class InitAppActivity extends AppCompatActivity {
          finishAffinity();
     }
 
-    ///  Open while changing the time
-    public void openTimeSelector(){
-        ///  read necessary data from calendar
-        Calendar calendar = Calendar.getInstance();
-        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currentMinute = calendar.get(Calendar.MINUTE);
-
-        ///  optional addition by reading currently set time and only if fails, then use current
-//        int hour = currentHour;
-//        int minute = currentMinute;
-
-        new TimePickerDialog(InitAppActivity.this, (view, initHour, initMinute) -> {
-            String time = String.format(Locale.getDefault(), "%02d:%02d:00", initHour, initMinute);
-            m_dateTime.timeEditText.setText(time);
-        }, currentHour, currentMinute, true).show();
-    }
-
-    ///  Open while changing the date
-    public void openDateSelector(){
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDayOfM = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                InitAppActivity.this,
-                (view, year, month, dayOfMonth) -> {
-                    String selectedDate = String.format(Locale.getDefault(),
-                            "%04d/%02d/%02d", year, month + 1, dayOfMonth);
-                    m_dateTime.dateEditText.setText(selectedDate);
-                }, currentYear, currentMonth, currentDayOfM
-        );
-        datePickerDialog.show();
-    }
-
     ///  Called while user press Save (initial data)
     public void onSaveInitDataButtonClicked(){
+        Log.i("INIT_APP_ACTIVITY_LOGS", "onSaveInitDataButtonClicked");
         try{
             this.processInitialPLNValue();
             this.processCurrentFuelAmount();
-            this.processTimeValue();
-            this.processDateValue();
+            m_dateTime.processTimeValue(m_validatedDataSet.timeDateDataSet);
+            m_dateTime.processDateValue(m_validatedDataSet.timeDateDataSet);
 
-            // log success
             this.closeInitActivity();
         } catch (Exception e) {
-            // log failed
+            Log.i("INIT_APP_ACTIVITY_LOGS", "onSaveInitDataButtonClicked exception: " + e);
         }
     }
 
     private void processInitialPLNValue() throws Exception {
+        Log.i("INIT_APP_ACTIVITY_LOGS", "processInitialPLNValue");
         String initialPLNValue = m_initialPLNValueEditText.getText().toString().trim();
         Log.i("INIT_APP_ACTIVITY_LOGS", "initialPLNValue1 value: " + initialPLNValue);
 
@@ -194,6 +134,7 @@ public class InitAppActivity extends AppCompatActivity {
     }
 
     private void processCurrentFuelAmount() throws Exception {
+        Log.i("INIT_APP_ACTIVITY_LOGS", "processCurrentFuelAmount");
         String currentFuelAmount = m_currentFuelAmountEditText.getText().toString().trim();
         Log.i("INIT_APP_ACTIVITY_LOGS", "currentFuelAmount value: " + currentFuelAmount);
 
@@ -218,99 +159,9 @@ public class InitAppActivity extends AppCompatActivity {
         m_validatedDataSet.validatedCurrentFuelAmount = parsedValue;
     }
 
-    private void processTimeValue() throws Exception {
-        String timeInput = m_dateTime.timeEditText.getText().toString().trim();
-        Log.i("INIT_APP_ACTIVITY_LOGS", "timeInput value: " + timeInput);
-
-        if (TextUtils.isEmpty(timeInput)) {
-            m_dateTime.timeEditText.setError("Field cannot be empty");
-            m_dateTime.timeEditText.requestFocus();
-            throw new Exception("empty value");
-            // return;
-        }
-
-        // expected pattern HH:MM:SS
-        if (!timeInput.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
-            m_dateTime.timeEditText.setError("invalid time format, expected HH:MM:SS");
-            m_dateTime.timeEditText.requestFocus();
-            throw new Exception("invalid format");
-            // return;
-        }
-
-        // parse String to ints
-        String[] parts = timeInput.split(":");
-        int h, m, s;
-        try {
-            h = Integer.parseInt(parts[0]);
-            m = Integer.parseInt(parts[1]);
-            s = Integer.parseInt(parts[2]);
-        } catch (NumberFormatException e) {
-            m_dateTime.timeEditText.setError("Cannot parse value to three ints");
-            throw new Exception("parse to 3 ints failed");
-        }
-
-        // set data to variable
-        m_validatedDataSet.hour = h;
-        m_validatedDataSet.minute = m;
-        m_validatedDataSet.second = s;
-    }
-
-    static private boolean isValidDayForMonth(int year, int month, int day) {
-        if (month == 2) { // February
-            boolean isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-            return day <= (isLeapYear ? 29 : 28);
-        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
-            return day <= 30; // April, June, October, November
-        } else {
-            return day <= 31; // other months
-        }
-    }
-
-    private void processDateValue() throws Exception {
-        String dateInput = m_dateTime.dateEditText.getText().toString().trim();
-        Log.i("INIT_APP_ACTIVITY_LOGS", "dateInput value: " + dateInput);
-
-        if (TextUtils.isEmpty(dateInput)) {
-            m_dateTime.dateEditText.setError("Field cannot be empty");
-            m_dateTime.dateEditText.requestFocus();
-            throw new Exception("empty value");
-            // return;
-        }
-
-        // expected pattern YYY/MM/DD
-        if (!dateInput.matches("^\\d{4}/(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])$")) {
-            m_dateTime.dateEditText.setError("invalid date format,\n expected YYYY/MM/DD");
-            m_dateTime.dateEditText.requestFocus();
-            throw new Exception("invalid format");
-            // return;
-        }
-
-        // parse String to ints
-        String[] parts = dateInput.split("/");
-        int year, month, day;
-        try {
-            year = Integer.parseInt(parts[0]);
-            month = Integer.parseInt(parts[1]);
-            day = Integer.parseInt(parts[2]);
-        } catch (NumberFormatException e) {
-            m_dateTime.dateEditText.setError("Cannot parse value to three ints");
-            throw new Exception("parse to 3 ints failed");
-        }
-
-        // check if February does not have 31 days
-        if (!InitAppActivity.isValidDayForMonth(year, month, day)) {
-            m_dateTime.dateEditText.setError("invalid day for that month and year");
-            throw new Exception("invalid day for that month");
-            // return;
-        }
-
-        // set data to variable
-        m_validatedDataSet.year = year;
-        m_validatedDataSet.month = month;
-        m_validatedDataSet.day = day;
-    }
 
     private void closeInitActivity(){
+        Log.i("INIT_APP_ACTIVITY_LOGS", "closeInitActivity");
         // add data to return
 
         Intent returnIntent = new Intent();

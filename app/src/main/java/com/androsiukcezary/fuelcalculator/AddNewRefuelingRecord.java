@@ -2,6 +2,8 @@ package com.androsiukcezary.fuelcalculator;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
@@ -11,6 +13,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class AddNewRefuelingRecord extends AppCompatActivity {
+
+    EditText m_currentFuelEditText;
+    Button m_saveNewRefuelingButton;
+    DateTimeStruct m_dateTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,18 @@ public class AddNewRefuelingRecord extends AppCompatActivity {
 
         ImageButton closeAddingRefuelingButton = (ImageButton) findViewById(R.id.closeAddingRefuelingButton);
         closeAddingRefuelingButton.setOnClickListener(v -> this.closeActivity());
+
+        m_currentFuelEditText = (EditText) findViewById(R.id.currentFuelEditText);
+        m_saveNewRefuelingButton = (Button) findViewById(R.id.saveNewRefuelingButton);
+
+        ///  create date time structure and assign views to them
+        m_dateTime = new DateTimeStruct(
+                this,
+                findViewById(R.id.timeEditText),
+                findViewById(R.id.timeSelectButton),
+                findViewById(R.id.dateEditText),
+                findViewById(R.id.dateSelectButton)
+        );
 
     }
 

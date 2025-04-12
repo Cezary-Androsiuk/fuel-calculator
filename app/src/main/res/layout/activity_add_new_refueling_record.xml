@@ -60,6 +60,102 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.1" />
             </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="40dp" />
+
+            <EditText
+                android:id="@+id/currentFuelEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Current Fuel (liters)"
+                android:inputType="numberSigned|numberDecimal" />
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="60dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/timeEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Time"
+                    android:layout_weight="0.85"
+                    android:inputType="time" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.05" />
+
+                <ImageButton
+                    android:id="@+id/timeSelectButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_access_time_24"
+                    app:tint="#C1DCDCDC" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/dateEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.85"
+                    android:hint="Date"
+                    android:inputType="date" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.05" />
+
+                <ImageButton
+                    android:id="@+id/dateSelectButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_calendar_month_24"
+                    app:tint="#C1C1C1" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/saveNewRefuelingButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save" />
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 
