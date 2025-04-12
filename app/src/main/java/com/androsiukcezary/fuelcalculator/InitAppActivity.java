@@ -61,8 +61,8 @@ public class InitAppActivity extends AppCompatActivity {
             return insets;
         });
 
-        // remove later - after adding vertically scrollable interface
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        // remove later - after adding vertically scrollable interface
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if(m_activityInitialized)
             return;
