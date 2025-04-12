@@ -1,0 +1,1 @@
+1. w momencie dodawania dowolnego rekordu, będize też na dole coś w stylu combobox do wybrania na której pozycji powinien wylądować nowo dodany record 
