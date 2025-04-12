@@ -1,8 +1,8 @@
 package com.androsiukcezary.fuelcalculator;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.androsiukcezary.fuelcalculator.data.FuelRecordModel;
+import com.androsiukcezary.fuelcalculator.data.FuelRecordType;
 
 import java.util.ArrayList;
 
@@ -60,11 +63,36 @@ public class FuelRecordRecyclerViewAdapter
         /// here implement info about how recyclerview changes his items
         if(holder instanceof ItemViewHolder)
         {
-            int normalizedPosition = position -1; // we are skipping header
+            int normalizedPosition = position -1; // we are skipping the header
             FuelRecordModel frm = m_fuelRecordModels.get(normalizedPosition);
+
+            if(frm.getFuelRecordType() == FuelRecordType.FirstRecordType)
+            {
+
+            }
+            else if(frm.getFuelRecordType() == FuelRecordType.StartTripType)
+            {
+
+            }
+            else if(frm.getFuelRecordType() == FuelRecordType.EndTripType)
+            {
+
+            }
+            else if(frm.getFuelRecordType() == FuelRecordType.RefuelingType)
+            {
+
+            }
+            else if(frm.getFuelRecordType() == FuelRecordType.PaymentType)
+            {
+
+            }
+            else
+            {
+                Log.i("FUEL_RECORD_RECYCLER_VIEW_ADAPTER_ACTIVITY_LOGS", "unknown Fuel Record Type");
+            }
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-            itemViewHolder.fromFuelTextView.setText( Double.toString(frm.getFromFuel()) );
-            itemViewHolder.toFuelTextView.setText( Double.toString(frm.getToFuel()) );
+            itemViewHolder.fromFuelTextView.setText( "0.0" );
+            itemViewHolder.toFuelTextView.setText( "0.0" );
         }
     }
 

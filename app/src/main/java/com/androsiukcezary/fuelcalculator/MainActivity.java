@@ -219,25 +219,25 @@ public class MainActivity extends AppCompatActivity {
 
 
         ///  temporary create data to display
-        int size = 50;
-        double[] fromFuels = new double[size];
-        for(int i=0; i<size; i++)
-            fromFuels[size-i-1] = i* 3.0;
-        double[] toFuels = new double[size];
-        for(int i=0; i<size; i++)
-            toFuels[size-i-1] = (i+1)* 3.0;
-
-        for(int i=0; i<size; i++)
-        {
-            m_fuelRecordModels.add( new FuelRecordModel(fromFuels[i], toFuels[i]) );
-        }
-
-        RecyclerView mainRecyclerView = findViewById(R.id.mainRecyclerView);
-
-        FuelRecordRecyclerViewAdapter recyclerAdapter =
-                new FuelRecordRecyclerViewAdapter(this, m_fuelRecordModels);
-        mainRecyclerView.setAdapter(recyclerAdapter);
-        mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
+//        int size = 50;
+//        double[] fromFuels = new double[size];
+//        for(int i=0; i<size; i++)
+//            fromFuels[size-i-1] = i* 3.0;
+//        double[] toFuels = new double[size];
+//        for(int i=0; i<size; i++)
+//            toFuels[size-i-1] = (i+1)* 3.0;
+//
+//        for(int i=0; i<size; i++)
+//        {
+//            m_fuelRecordModels.add( new FuelRecordModel(fromFuels[i], toFuels[i]) );
+//        }
+//
+//        RecyclerView mainRecyclerView = findViewById(R.id.mainRecyclerView);
+//
+//        FuelRecordRecyclerViewAdapter recyclerAdapter =
+//                new FuelRecordRecyclerViewAdapter(this, m_fuelRecordModels);
+//        mainRecyclerView.setAdapter(recyclerAdapter);
+//        mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
     }
 
     public void addNewRecord(){
