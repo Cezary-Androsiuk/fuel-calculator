@@ -25,6 +25,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androsiukcezary.fuelcalculator.data.FuelRecordModel;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -391,9 +393,12 @@ public class MainActivity extends AppCompatActivity {
                                 System.exit(0); // exit to ensure that there will be exit if something fails
                                 return;
                             }
-                            data.getSerializableExtra("");
+                            double refueledQuantity = data.getDoubleExtra("REFUELED_QUANTITY", -1.0);
+                            double fuelPrice = data.getDoubleExtra("FUEL_PRICE", -1.0);
+                            boolean otherCarUserPays = data.getBooleanExtra("OTHER_CAR_USER_PAYS", false);
+                            TimeDateDataSet timeDataDataSet = (TimeDateDataSet) data.getSerializableExtra("TIME_DATA_DATA_SET");
 
-                            addNewRefuelingRecord();
+                            addNewRefuelingRecord(refueledQuantity, fuelPrice, otherCarUserPays, timeDataDataSet);
                         }
                         else if(o.getResultCode() == RESULT_CANCELED)
                         {
@@ -426,8 +431,10 @@ public class MainActivity extends AppCompatActivity {
                                 return;
                             }
                             data.getSerializableExtra("");
+                            double moneyPaid = data.getDoubleExtra("MONEY_PAID", -1.0);
+                            TimeDateDataSet timeDataDataSet = (TimeDateDataSet) data.getSerializableExtra("TIME_DATA_DATA_SET");
 
-                            addNewPaymentRecord();
+                            addNewPaymentRecord(moneyPaid, timeDataDataSet);
                         }
                         else if(o.getResultCode() == RESULT_CANCELED)
                         {
@@ -471,23 +478,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void addNewStartTripRecord(double currentFuel, TimeDateDataSet timeDateDataSet){
         Log.i("MAIN_ACTIVITY_LOGS", "addNewStartTripRecord");
-        Log.i("MAIN_ACTIVITY_LOGS", "addNewStartTripRecord: " + Double.toString(currentFuel) +", " + timeDateDataSet);
+        Log.i("MAIN_ACTIVITY_LOGS", "currentFuel: " + Double.toString(currentFuel) +", " + timeDateDataSet);
 
         this.m_tripStarted = true;
     }
 
     private void addNewEndTripRecord(double currentFuel, TimeDateDataSet timeDateDataSet){
         Log.i("MAIN_ACTIVITY_LOGS", "addNewEndTripRecord");
-        Log.i("MAIN_ACTIVITY_LOGS", "addNewEndTripRecord: " + Double.toString(currentFuel) +", " + timeDateDataSet);
+        Log.i("MAIN_ACTIVITY_LOGS", "currentFuel: " + Double.toString(currentFuel) +", " + timeDateDataSet);
 
         this.m_tripStarted = false;
     }
 
-    private void addNewRefuelingRecord(){
+    private void addNewRefuelingRecord(
+            double refueledQuantity, double fuelPrice,
+            boolean otherCarUserPays, TimeDateDataSet timeDataDataSet)
+    {
+        Log.i("MAIN_ACTIVITY_LOGS", "addNewRefuelingRecord");
+        Log.i("MAIN_ACTIVITY_LOGS", "refueledQuantity: " + Double.toString(refueledQuantity)
+                + ", fuelPrice: " + Double.toString(fuelPrice)
+                + ", otherCarUserPays: " + Boolean.toString(otherCarUserPays)
+                + ", " + timeDataDataSet
+        );
 
     }
 
-    private void addNewPaymentRecord(){
+    private void addNewPaymentRecord(double moneyPaid, TimeDateDataSet timeDataDataSet){
+        Log.i("MAIN_ACTIVITY_LOGS", "addNewPaymentRecord");
+        Log.i("MAIN_ACTIVITY_LOGS", "moneyPaid: " + Double.toString(moneyPaid) + ", " + timeDataDataSet);
 
     }
 }
