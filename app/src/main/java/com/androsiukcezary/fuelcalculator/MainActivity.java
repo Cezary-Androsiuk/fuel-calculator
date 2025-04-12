@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     final public static String m_dataFilePath = "./data.txt";
 
-    InitDataSet m_initDataSet;
-
     FuelRecordRecyclerViewAdapter recyclerAdapter;
     ArrayList<FuelRecordModel> fuelData = new ArrayList<>();
 
@@ -191,8 +189,12 @@ public class MainActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            m_initDataSet = (InitDataSet) data.getSerializableExtra("INIT_DATA_SET");
-                            onInitAppFinished();
+                            double initialPLNValue = data.getDoubleExtra("INITIAL_PLN_VALUE", -1.0);
+                            double currentFuel = data.getDoubleExtra("CURRENT_FUEL", -1.0);
+                            double currentFuelPrice = data.getDoubleExtra("CURRENT_FUEL_PRICE", -1.0);
+                            TimeDateDataSet timeDataDataSet = (TimeDateDataSet) data.getSerializableExtra("TIME_DATA_DATA_SET");
+
+                            onInitAppFinished(initialPLNValue, currentFuel, currentFuelPrice, timeDataDataSet);
                         }
                         else
                         {
@@ -205,16 +207,20 @@ public class MainActivity extends AppCompatActivity {
         initAppActivityResultLauncher.launch(intent);
     }
 
-    private void onInitAppFinished(){
+    private void onInitAppFinished(
+            double initialPLNValue, double currentFuel,
+            double currentFuelPrice,  TimeDateDataSet timeDataDataSet)
+    {
         Log.i("MAIN_ACTIVITY_LOGS", "onInitAppFinished");
-        Log.i("MAIN_ACTIVITY_LOGS", "m_initDataSet: " + m_initDataSet);
+        Log.i("MAIN_ACTIVITY_LOGS", "initialPLNValue: " + Double.toString(initialPLNValue)
+                + ", currentFuel: " + Double.toString(currentFuel)
+                + ", currentFuelPrice: " + Double.toString(currentFuelPrice)
+                + ", " + timeDataDataSet
+        );
         // transform initDataSet to something useful
 
         fuelData.add(new FirstRecordModel(
-                m_initDataSet.validatedInitialPLNValue,
-                m_initDataSet.validatedCurrentFuel,
-                m_initDataSet.validatedCurrentFuelPrice,
-                m_initDataSet.timeDateDataSet
+                initialPLNValue, currentFuel, currentFuelPrice, timeDataDataSet
         ));
         recyclerAdapter.notifyItemInserted(fuelData.size() - 1);
 

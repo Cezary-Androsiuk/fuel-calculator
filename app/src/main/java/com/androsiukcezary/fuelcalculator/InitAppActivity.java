@@ -33,7 +33,11 @@ public class InitAppActivity extends AppCompatActivity {
     DateTimeStruct m_dateTime;
     Button m_saveInitDataButton;
 
-    InitDataSet m_validatedDataSet = new InitDataSet();
+    double validatedInitialPLNValue = 0.0;
+    double validatedCurrentFuel = 0.0;
+    double validatedCurrentFuelPrice = 0.0;
+
+    TimeDateDataSet timeDateDataSet = new TimeDateDataSet();
 
     // prevents restarting while device changed position form vertical to horizontal
     boolean m_activityInitialized = false;
@@ -102,8 +106,8 @@ public class InitAppActivity extends AppCompatActivity {
             this.processInitialPLNValue();
             this.processCurrentFuel();
             this.processCurrentFuelPrice();
-            m_dateTime.processTimeValue(m_validatedDataSet.timeDateDataSet);
-            m_dateTime.processDateValue(m_validatedDataSet.timeDateDataSet);
+            m_dateTime.processTimeValue(timeDateDataSet);
+            m_dateTime.processDateValue(timeDateDataSet);
 
             this.closeInitActivity();
         } catch (Exception e) {
@@ -134,7 +138,7 @@ public class InitAppActivity extends AppCompatActivity {
         }
 
         // set data to variable
-        m_validatedDataSet.validatedInitialPLNValue = parsedValue;
+        this.validatedInitialPLNValue = parsedValue;
     }
 
     private void processCurrentFuel() throws Exception {
@@ -160,7 +164,7 @@ public class InitAppActivity extends AppCompatActivity {
         }
 
         // set data to variable
-        m_validatedDataSet.validatedCurrentFuel = parsedValue;
+        this.validatedCurrentFuel = parsedValue;
     }
 
     private void processCurrentFuelPrice() throws Exception {
@@ -186,7 +190,7 @@ public class InitAppActivity extends AppCompatActivity {
         }
 
         // set data to variable
-        m_validatedDataSet.validatedCurrentFuelPrice = parsedValue;
+        this.validatedCurrentFuelPrice = parsedValue;
     }
 
 
@@ -195,7 +199,10 @@ public class InitAppActivity extends AppCompatActivity {
         // add data to return
 
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("INIT_DATA_SET", m_validatedDataSet); // class requires serializable
+        returnIntent.putExtra("INITIAL_PLN_VALUE", validatedInitialPLNValue);
+        returnIntent.putExtra("CURRENT_FUEL", validatedCurrentFuel);
+        returnIntent.putExtra("CURRENT_FUEL_PRICE", validatedCurrentFuelPrice);
+        returnIntent.putExtra("TIME_DATA_DATA_SET", timeDateDataSet); // class requires serializable
 
         setResult(RESULT_OK, returnIntent);
         finish();
