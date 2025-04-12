@@ -25,9 +25,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androsiukcezary.fuelcalculator.data.EndTripRecordModel;
+import com.androsiukcezary.fuelcalculator.data.FirstRecordModel;
 import com.androsiukcezary.fuelcalculator.data.FuelRecordModel;
+import com.androsiukcezary.fuelcalculator.data.FuelRecordType;
+import com.androsiukcezary.fuelcalculator.data.PaymentRecordModel;
+import com.androsiukcezary.fuelcalculator.data.RefuelingRecordModel;
+import com.androsiukcezary.fuelcalculator.data.StartTripRecordModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     InitDataSet m_initDataSet;
 
-    ArrayList<FuelRecordModel> m_fuelRecordModels = new ArrayList<>();
+    FuelRecordRecyclerViewAdapter recyclerAdapter;
+    ArrayList<FuelRecordModel> fuelData = new ArrayList<>();
 
     ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
     ImageButton m_settingsButton;
@@ -73,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         this.createAddNewEndTripActivityLoader();
         this.createAddNewRefuelingActivityLoader();
         this.createAddNewPaymentActivityLoader();
+
+        this.initRecyclerView();
 
         m_settingsButton = (ImageButton) findViewById(R.id.settingsButton);
         m_settingsButton.setOnClickListener(v -> this.openSettings());
@@ -200,6 +210,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MAIN_ACTIVITY_LOGS", "m_initDataSet: " + m_initDataSet);
         // transform initDataSet to something useful
 
+        fuelData.add(new FirstRecordModel(
+                m_initDataSet.validatedInitialPLNValue,
+                m_initDataSet.validatedCurrentFuel,
+                m_initDataSet.validatedCurrentFuelPrice,
+                m_initDataSet.timeDateDataSet
+        ));
+        recyclerAdapter.notifyItemInserted(fuelData.size() - 1);
+
         ///  readDataFile not required all data are in memory
         this.useDataToStartAlreadyInitializedApplication();
     }
@@ -211,6 +229,15 @@ public class MainActivity extends AppCompatActivity {
     private void readDataFile(){ ///  called before useDataToStartAlreadyInitializedApplication()
         Log.i("MAIN_ACTIVITY_LOGS", "readDataFile");
 
+    }
+
+    private void initRecyclerView(){
+        RecyclerView mainRecyclerView = findViewById(R.id.mainRecyclerView);
+
+        recyclerAdapter =
+                new FuelRecordRecyclerViewAdapter(this, fuelData);
+        mainRecyclerView.setAdapter(recyclerAdapter);
+        mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
     }
 
     private void useDataToStartAlreadyInitializedApplication(){
@@ -231,13 +258,7 @@ public class MainActivity extends AppCompatActivity {
 //        {
 //            m_fuelRecordModels.add( new FuelRecordModel(fromFuels[i], toFuels[i]) );
 //        }
-//
-//        RecyclerView mainRecyclerView = findViewById(R.id.mainRecyclerView);
-//
-//        FuelRecordRecyclerViewAdapter recyclerAdapter =
-//                new FuelRecordRecyclerViewAdapter(this, m_fuelRecordModels);
-//        mainRecyclerView.setAdapter(recyclerAdapter);
-//        mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
+
     }
 
     public void addNewRecord(){
@@ -480,12 +501,22 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MAIN_ACTIVITY_LOGS", "addNewStartTripRecord");
         Log.i("MAIN_ACTIVITY_LOGS", "currentFuel: " + Double.toString(currentFuel) +", " + timeDateDataSet);
 
+        fuelData.add(new StartTripRecordModel(
+                currentFuel, timeDateDataSet
+        ));
+        recyclerAdapter.notifyItemInserted(fuelData.size() - 1);
+
         this.m_tripStarted = true;
     }
 
     private void addNewEndTripRecord(double currentFuel, TimeDateDataSet timeDateDataSet){
         Log.i("MAIN_ACTIVITY_LOGS", "addNewEndTripRecord");
         Log.i("MAIN_ACTIVITY_LOGS", "currentFuel: " + Double.toString(currentFuel) +", " + timeDateDataSet);
+
+        fuelData.add(new EndTripRecordModel(
+                currentFuel, timeDateDataSet
+        ));
+        recyclerAdapter.notifyItemInserted(fuelData.size() - 1);
 
         this.m_tripStarted = false;
     }
@@ -501,11 +532,20 @@ public class MainActivity extends AppCompatActivity {
                 + ", " + timeDataDataSet
         );
 
+        fuelData.add(new RefuelingRecordModel(
+                refueledQuantity, fuelPrice, otherCarUserPays, timeDataDataSet
+        ));
+        recyclerAdapter.notifyItemInserted(fuelData.size() - 1);
+
     }
 
     private void addNewPaymentRecord(double moneyPaid, TimeDateDataSet timeDataDataSet){
         Log.i("MAIN_ACTIVITY_LOGS", "addNewPaymentRecord");
         Log.i("MAIN_ACTIVITY_LOGS", "moneyPaid: " + Double.toString(moneyPaid) + ", " + timeDataDataSet);
 
+        fuelData.add(new PaymentRecordModel(
+                moneyPaid, timeDataDataSet
+        ));
+        recyclerAdapter.notifyItemInserted(fuelData.size() - 1);
     }
 }
