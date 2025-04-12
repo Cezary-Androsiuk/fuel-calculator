@@ -1,6 +1,10 @@
 package com.androsiukcezary.fuelcalculator;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +24,15 @@ public class AddNewPaymentRecord extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        ImageButton closeAddingPaymentButton = (ImageButton) findViewById(R.id.closeAddingPaymentButton);
+        closeAddingPaymentButton.setOnClickListener(v -> this.closeActivity());
+
+    }
+
+    private void closeActivity(){
+        Log.i("ADD_NEW_PAYMENT_RECORD_ACTIVITY_LOGS", "closeActivity");
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }

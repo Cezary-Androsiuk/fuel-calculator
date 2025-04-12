@@ -30,7 +30,7 @@
                     android:layout_weight="0.1">
 
                     <ImageButton
-                        android:id="@+id/closeAddingPayment"
+                        android:id="@+id/closeAddingPaymentButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -51,8 +51,8 @@
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
                     android:text="Add New Payment"
-                    android:layout_weight="0.4"
-                    android:textSize="26sp"
+                    android:layout_weight="0.8"
+                    android:textSize="22sp"
                     tools:layout_editor_absoluteY="675dp" />
 
                 <View
