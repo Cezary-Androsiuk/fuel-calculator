@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:text="Add New Refueling"
+                    android:text="New Refueling"
                     android:layout_weight="0.8"
                     android:textSize="22sp"
                     tools:layout_editor_absoluteY="675dp" />

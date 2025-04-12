@@ -37,10 +37,17 @@
             app:layout_constraintTop_toBottomOf="@+id/textView1">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDialogTrip"
+                android:id="@+id/btnDialogStartTrip"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:text="Trip"
+                android:text="Start Trip"
+                app:icon="@drawable/baseline_calendar_month_24"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogEndTrip"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:text="End Trip"
                 app:icon="@drawable/baseline_calendar_month_24"/>
 
             <com.google.android.material.button.MaterialButton

@@ -38,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
     ImageButton m_settingsButton;
 
-    ActivityResultLauncher<Intent> m_addNewTripActivityResultLauncher;
+    ActivityResultLauncher<Intent> m_addNewStartTripActivityResultLauncher;
+    ActivityResultLauncher<Intent> m_addNewEndTripActivityResultLauncher;
     ActivityResultLauncher<Intent> m_addNewRefuelingActivityResultLauncher;
     ActivityResultLauncher<Intent> m_addNewPayemntActivityResultLauncher;
+
+    boolean m_tripStarted = false;
 
     /// NOT WORKS
 //    // prevents restarting while device changed position form vertical to horizontal
@@ -64,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         this.createSettingsActivityLoader();
-        this.createAddNewTripActivityLoader();
+        this.createAddNewStartTripActivityLoader();
+        this.createAddNewEndTripActivityLoader();
         this.createAddNewRefuelingActivityLoader();
         this.createAddNewPaymentActivityLoader();
 
@@ -244,17 +248,29 @@ public class MainActivity extends AppCompatActivity {
         newRecordDialog.setCancelable(true);
         newRecordDialog.show();
 
-        ///  New Trip Recordd Button
-        Button tripButton = (Button) newRecordDialog.findViewById(R.id.btnDialogTrip);
-        tripButton.setOnClickListener(new View.OnClickListener() {
+        ///  Start Trip Recordd Button
+        Button startTripButton = (Button) newRecordDialog.findViewById(R.id.btnDialogStartTrip);
+        startTripButton.setEnabled(!m_tripStarted);
+        startTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newRecordDialog.dismiss();
-                openAddNewTripRecordActivity();
+                openAddNewStartTripRecordActivity();
+            }
+        });
+        ///  End Trip Recordd Button
+        Button endTripButton = (Button) newRecordDialog.findViewById(R.id.btnDialogEndTrip);
+        endTripButton.setEnabled(m_tripStarted);
+        endTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+                openAddNewEndTripRecordActivity();
             }
         });
         ///  New Refueling Record Button
         Button refuelingButton = (Button) newRecordDialog.findViewById(R.id.btnDialogRefueling);
+        refuelingButton.setEnabled(!m_tripStarted);
         refuelingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
         });
         ///  New Payment Record Button
         Button paymentButton = (Button) newRecordDialog.findViewById(R.id.btnDialogPayment);
+        paymentButton.setEnabled(!m_tripStarted);
         paymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -285,8 +302,8 @@ public class MainActivity extends AppCompatActivity {
     ///
     /// New Record Activities
     ///
-    private void createAddNewTripActivityLoader(){
-        m_addNewTripActivityResultLauncher = registerForActivityResult(
+    private void createAddNewStartTripActivityLoader(){
+        m_addNewStartTripActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -305,7 +322,40 @@ public class MainActivity extends AppCompatActivity {
                             }
                             data.getSerializableExtra("");
 
-                            addNewTripRecord();
+                            addNewStartTripRecord();
+                        }
+                        else if(o.getResultCode() == RESULT_CANCELED)
+                        {
+                            ///  do nothing
+                        }
+                        else
+                        {
+                            ///  do nothing
+                        }
+                    }
+                });
+    }
+    private void createAddNewEndTripActivityLoader(){
+        m_addNewEndTripActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == RESULT_OK)
+                        {
+                            Intent data = o.getData();
+                            if(data == null)
+                            {
+                                Log.i("MAIN_ACTIVITY_LOGS", "data is null");
+
+                                /// IDK WHAT TO DO HERE, SEAMS LIKE A DEAD END WHERE APP CRASH
+                                finishAffinity(); // Closes all activities and ends the application process
+                                System.exit(0); // exit to ensure that there will be exit if something fails
+                                return;
+                            }
+                            data.getSerializableExtra("");
+
+                            addNewEndTripRecord();
                         }
                         else if(o.getResultCode() == RESULT_CANCELED)
                         {
@@ -385,31 +435,42 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void openAddNewTripRecordActivity(){
-        Log.i("MAIN_ACTIVITY_LOGS", "openAddNewTripRecord");
+    private void openAddNewStartTripRecordActivity(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openAddStartTripRecordActivity");
 
-        Intent intent = new Intent(this, AddNewTripRecord.class);
-        m_addNewTripActivityResultLauncher.launch(intent);
+        Intent intent = new Intent(this, AddNewStartTripRecord.class);
+        m_addNewStartTripActivityResultLauncher.launch(intent);
+    }
+
+    private void openAddNewEndTripRecordActivity(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openAddEndTripRecordActivity");
+
+        Intent intent = new Intent(this, AddNewEndTripRecord.class);
+        m_addNewEndTripActivityResultLauncher.launch(intent);
     }
 
     private void openAddNewRefuelingRecordActivity(){
         Log.i("MAIN_ACTIVITY_LOGS", "openAddNewRefuelingRecord");
 
         Intent intent = new Intent(this, AddNewRefuelingRecord.class);
-        m_addNewTripActivityResultLauncher.launch(intent);
-
+        m_addNewRefuelingActivityResultLauncher.launch(intent);
     }
 
     private void openAddNewPaymentRecordActivity(){
         Log.i("MAIN_ACTIVITY_LOGS", "openAddNewPaymentRecord");
 
         Intent intent = new Intent(this, AddNewPaymentRecord.class);
-        m_addNewTripActivityResultLauncher.launch(intent);
-
+        m_addNewPayemntActivityResultLauncher.launch(intent);
     }
 
-    private void addNewTripRecord(){
+    private void addNewStartTripRecord(){
 
+        this.m_tripStarted = true;
+    }
+
+    private void addNewEndTripRecord(){
+
+        this.m_tripStarted = false;
     }
 
     private void addNewRefuelingRecord(){

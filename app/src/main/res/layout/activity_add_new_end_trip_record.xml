@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddNewStartTripRecord">
+    tools:context=".AddNewEndTripRecord">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,7 +31,7 @@
                     android:layout_weight="0.1">
 
                     <ImageButton
-                        android:id="@+id/closeAddingStartTripButton"
+                        android:id="@+id/closeAddingEndRefuelingButton"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -50,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:text="New Start Trip"
+                    android:text="New End Trip"
                     android:layout_weight="0.8"
                     android:textSize="22sp"
                     tools:layout_editor_absoluteY="675dp" />
