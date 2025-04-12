@@ -28,7 +28,8 @@ public class InitAppActivity extends AppCompatActivity {
     static final boolean m_disableActivityForDebug = true;
 
     EditText m_initialPLNValueEditText;
-    EditText m_currentFuelAmountEditText;
+    EditText m_currentFuelEditText;
+    EditText m_currentFuelPriceEditText;
     DateTimeStruct m_dateTime;
     Button m_saveInitDataButton;
 
@@ -58,7 +59,8 @@ public class InitAppActivity extends AppCompatActivity {
 
         ///  assign initial PLN and current fuel views to variables
         m_initialPLNValueEditText = (EditText) findViewById(R.id.initialPLNValueEditText);
-        m_currentFuelAmountEditText = (EditText) findViewById(R.id.currentFuelAmountEditText);
+        m_currentFuelEditText = (EditText) findViewById(R.id.currentFuelEditText);
+        m_currentFuelPriceEditText = (EditText) findViewById(R.id.currentFuelPriceEditText);
 
         ///  create date time structure and assign views to them
         m_dateTime = new DateTimeStruct(
@@ -78,8 +80,9 @@ public class InitAppActivity extends AppCompatActivity {
         if(m_disableActivityForDebug)
         {
             m_initialPLNValueEditText.setText("0.0"); /// DEBUG
-            m_currentFuelAmountEditText.setText("0.0"); /// DEBUG
-            m_saveInitDataButton.callOnClick(); /// DEBUG
+            m_currentFuelEditText.setText("0.0"); /// DEBUG
+            m_currentFuelPriceEditText.setText("0.0"); /// DEBUG
+//            m_saveInitDataButton.callOnClick(); /// DEBUG
         }
 
         m_activityInitialized = true;
@@ -97,7 +100,8 @@ public class InitAppActivity extends AppCompatActivity {
         Log.i("INIT_APP_ACTIVITY_LOGS", "onSaveInitDataButtonClicked");
         try{
             this.processInitialPLNValue();
-            this.processCurrentFuelAmount();
+            this.processCurrentFuel();
+            this.processCurrentFuelPrice();
             m_dateTime.processTimeValue(m_validatedDataSet.timeDateDataSet);
             m_dateTime.processDateValue(m_validatedDataSet.timeDateDataSet);
 
@@ -133,14 +137,14 @@ public class InitAppActivity extends AppCompatActivity {
         m_validatedDataSet.validatedInitialPLNValue = parsedValue;
     }
 
-    private void processCurrentFuelAmount() throws Exception {
-        Log.i("INIT_APP_ACTIVITY_LOGS", "processCurrentFuelAmount");
-        String currentFuelAmount = m_currentFuelAmountEditText.getText().toString().trim();
-        Log.i("INIT_APP_ACTIVITY_LOGS", "currentFuelAmount value: " + currentFuelAmount);
+    private void processCurrentFuel() throws Exception {
+        Log.i("INIT_APP_ACTIVITY_LOGS", "processCurrentFuel");
+        String currentFuel = m_currentFuelEditText.getText().toString().trim();
+        Log.i("INIT_APP_ACTIVITY_LOGS", "processCurrentFuel value: " + currentFuel);
 
-        if (TextUtils.isEmpty(currentFuelAmount)) {
-            m_currentFuelAmountEditText.setError("Field cannot be empty");
-            m_currentFuelAmountEditText.requestFocus();
+        if (TextUtils.isEmpty(currentFuel)) {
+            m_currentFuelEditText.setError("Field cannot be empty");
+            m_currentFuelEditText.requestFocus();
             throw new Exception("empty value");
             // return;
         }
@@ -148,15 +152,41 @@ public class InitAppActivity extends AppCompatActivity {
         // parse String to double
         double parsedValue;
         try {
-            String normalizedInput = currentFuelAmount.replace(",", ".");
+            String normalizedInput = currentFuel.replace(",", ".");
             parsedValue = Double.parseDouble(normalizedInput);
         } catch (NumberFormatException e) {
-            m_currentFuelAmountEditText.setError("Cannot parse value to double");
+            m_currentFuelEditText.setError("Cannot parse value to double");
             throw new Exception("parse to double failed");
         }
 
         // set data to variable
-        m_validatedDataSet.validatedCurrentFuelAmount = parsedValue;
+        m_validatedDataSet.validatedCurrentFuel = parsedValue;
+    }
+
+    private void processCurrentFuelPrice() throws Exception {
+        Log.i("INIT_APP_ACTIVITY_LOGS", "processCurrentFuelPrice");
+        String currentFuelPrice = m_currentFuelPriceEditText.getText().toString().trim();
+        Log.i("INIT_APP_ACTIVITY_LOGS", "processCurrentFuelPrice value: " + currentFuelPrice);
+
+        if (TextUtils.isEmpty(currentFuelPrice)) {
+            m_currentFuelPriceEditText.setError("Field cannot be empty");
+            m_currentFuelPriceEditText.requestFocus();
+            throw new Exception("empty value");
+            // return;
+        }
+
+        // parse String to double
+        double parsedValue;
+        try {
+            String normalizedInput = currentFuelPrice.replace(",", ".");
+            parsedValue = Double.parseDouble(normalizedInput);
+        } catch (NumberFormatException e) {
+            m_currentFuelPriceEditText.setError("Cannot parse value to double");
+            throw new Exception("parse to double failed");
+        }
+
+        // set data to variable
+        m_validatedDataSet.validatedCurrentFuelPrice = parsedValue;
     }
 
 

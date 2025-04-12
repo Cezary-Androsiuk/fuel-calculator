@@ -36,7 +36,7 @@
                 android:id="@+id/initialPLNValueEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Initial value (PLN)"
+                android:hint="Initial Value (PLN)"
                 android:inputType="numberSigned|numberDecimal" />
 
             <View
@@ -44,11 +44,22 @@
                 android:layout_height="30dp" />
 
             <EditText
-                android:id="@+id/currentFuelAmountEditText"
+                android:id="@+id/currentFuelEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Fuel in tank (liters)"
+                android:hint="Current Fuel (liters)"
                 android:inputType="numberDecimal" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="30dp" />
+
+            <EditText
+                android:id="@+id/currentFuelPriceEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Current Fuel Price (PLN)"
+                android:inputType="numberSigned|numberDecimal" />
             <!--            android:hint="abc"/>-->
 
             <!--        <View-->
