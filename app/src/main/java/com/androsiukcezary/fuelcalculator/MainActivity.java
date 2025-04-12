@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
     ImageButton m_settingsButton;
 
+    ActivityResultLauncher<Intent> m_addNewTripActivityResultLauncher;
+    ActivityResultLauncher<Intent> m_addNewRefuelingActivityResultLauncher;
+    ActivityResultLauncher<Intent> m_addNewPayemntActivityResultLauncher;
+
     /// NOT WORKS
 //    // prevents restarting while device changed position form vertical to horizontal
 //    boolean m_activityInitialized = false;
@@ -60,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         this.createSettingsActivityLoader();
+        this.createAddNewTripActivityLoader();
+        this.createAddNewRefuelingActivityLoader();
+        this.createAddNewPaymentActivityLoader();
 
         m_settingsButton = (ImageButton) findViewById(R.id.settingsButton);
         m_settingsButton.setOnClickListener(v -> this.openSettings());
@@ -104,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
                         {
                             eraseAppMemory();
                         }
-//                        else if(o.getResultCode() == RESULT_OK)
-//                        {
-//                            ///  do nothing
-//                        }
-//                        else
-//                        {
-//                            ///  do nothing
-//                        }
+                        else if(o.getResultCode() == RESULT_OK)
+                        {
+                            ///  do nothing
+                        }
+                        else
+                        {
+                            ///  do nothing
+                        }
                     }
                 });
 
@@ -170,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
 
                             m_initDataSet = (InitDataSet) data.getSerializableExtra("INIT_DATA_SET");
                             onInitAppFinished();
+                        }
+                        else
+                        {
+                            ///  do nothing
                         }
                     }
                 });
@@ -239,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 newRecordDialog.dismiss();
-                addNewTripRecord();
+                openAddNewTripRecordActivity();
             }
         });
         ///  New Refueling Record Button
@@ -248,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 newRecordDialog.dismiss();
-                addNewRefuelingRecord();
+                openAddNewRefuelingRecordActivity();
             }
         });
         ///  New Payment Record Button
@@ -257,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 newRecordDialog.dismiss();
-                addNewPaymentRecord();
+                openAddNewPaymentRecordActivity();
             }
         });
         ///  Cancel Adding New Record Button
@@ -268,6 +279,133 @@ public class MainActivity extends AppCompatActivity {
                 newRecordDialog.dismiss();
             }
         });
+    }
+
+
+    ///
+    /// New Record Activities
+    ///
+    private void createAddNewTripActivityLoader(){
+        m_addNewTripActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == RESULT_OK)
+                        {
+                            Intent data = o.getData();
+                            if(data == null)
+                            {
+                                Log.i("MAIN_ACTIVITY_LOGS", "data is null");
+
+                                /// IDK WHAT TO DO HERE, SEAMS LIKE A DEAD END WHERE APP CRASH
+                                finishAffinity(); // Closes all activities and ends the application process
+                                System.exit(0); // exit to ensure that there will be exit if something fails
+                                return;
+                            }
+                            data.getSerializableExtra("");
+
+                            addNewTripRecord();
+                        }
+                        else if(o.getResultCode() == RESULT_CANCELED)
+                        {
+                            ///  do nothing
+                        }
+                        else
+                        {
+                            ///  do nothing
+                        }
+                    }
+                });
+    }
+    private void createAddNewRefuelingActivityLoader(){
+        m_addNewRefuelingActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == RESULT_OK)
+                        {
+                            Intent data = o.getData();
+                            if(data == null)
+                            {
+                                Log.i("MAIN_ACTIVITY_LOGS", "data is null");
+
+                                /// IDK WHAT TO DO HERE, SEAMS LIKE A DEAD END WHERE APP CRASH
+                                finishAffinity(); // Closes all activities and ends the application process
+                                System.exit(0); // exit to ensure that there will be exit if something fails
+                                return;
+                            }
+                            data.getSerializableExtra("");
+
+                            addNewRefuelingRecord();
+                        }
+                        else if(o.getResultCode() == RESULT_CANCELED)
+                        {
+                            ///  do nothing
+                        }
+                        else
+                        {
+                            ///  do nothing
+                        }
+                    }
+                });
+    }
+    private void createAddNewPaymentActivityLoader(){
+        m_addNewPayemntActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == RESULT_OK)
+                        {
+                            Intent data = o.getData();
+                            if(data == null)
+                            {
+                                Log.i("MAIN_ACTIVITY_LOGS", "data is null");
+
+                                /// IDK WHAT TO DO HERE, SEAMS LIKE A DEAD END WHERE APP CRASH
+                                finishAffinity(); // Closes all activities and ends the application process
+                                System.exit(0); // exit to ensure that there will be exit if something fails
+                                return;
+                            }
+                            data.getSerializableExtra("");
+
+                            addNewPaymentRecord();
+                        }
+                        else if(o.getResultCode() == RESULT_CANCELED)
+                        {
+                            ///  do nothing
+                        }
+                        else
+                        {
+                            ///  do nothing
+                        }
+                    }
+                });
+    }
+
+    private void openAddNewTripRecordActivity(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openAddNewTripRecord");
+
+        Intent intent = new Intent(this, AddNewTripRecord.class);
+        m_addNewTripActivityResultLauncher.launch(intent);
+    }
+
+    private void openAddNewRefuelingRecordActivity(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openAddNewRefuelingRecord");
+
+        Intent intent = new Intent(this, AddNewRefuelingRecord.class);
+        m_addNewTripActivityResultLauncher.launch(intent);
+
+    }
+
+    private void openAddNewPaymentRecordActivity(){
+        Log.i("MAIN_ACTIVITY_LOGS", "openAddNewPaymentRecord");
+
+        Intent intent = new Intent(this, AddNewPaymentRecord.class);
+        m_addNewTripActivityResultLauncher.launch(intent);
+
     }
 
     private void addNewTripRecord(){
