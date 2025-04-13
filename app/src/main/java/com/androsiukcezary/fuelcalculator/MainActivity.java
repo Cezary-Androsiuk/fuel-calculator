@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void addNewRecord(){
+    public void askIfAddNewRecord(){
         ///  Show New Record Dialog
         Dialog newRecordDialog = new Dialog(this);
         newRecordDialog.setContentView(R.layout.add_new_record_dialog_box);
@@ -324,6 +324,37 @@ public class MainActivity extends AppCompatActivity {
                 newRecordDialog.dismiss();
             }
         });
+    }
+
+    public void askIfDeleteRecord(int position){
+        ///  Show New Record Dialog
+        Dialog newRecordDialog = new Dialog(this);
+        newRecordDialog.setContentView(R.layout.confirm_delete_newest_fuel_record_dialog_box);
+        newRecordDialog.getWindow().setLayout(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newRecordDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_box_background));
+        newRecordDialog.setCancelable(true);
+        newRecordDialog.show();
+
+        ///  Cancel
+        Button cancelButton = (Button) newRecordDialog.findViewById(R.id.btnDialogCancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+            }
+        });
+
+        ///  Confirm deleting newest record
+        Button confirmButton = (Button) newRecordDialog.findViewById(R.id.btnDialogConfirm);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newRecordDialog.dismiss();
+                deleteFuelRecord(position);
+            }
+        });
+
     }
 
 
@@ -554,5 +585,17 @@ public class MainActivity extends AppCompatActivity {
     private void addFuelRecord(FuelRecordModel model){
         fuelRecordModels.add(0, model);
         recyclerAdapter.notifyItemInserted(0);
+    }
+
+    private void deleteFuelRecord(int position){
+        try
+        {
+            fuelRecordModels.remove(position);
+            recyclerAdapter.notifyItemRemoved(position);
+        }
+        catch (IndexOutOfBoundsException e)
+        {
+            Log.i("MAIN_ACTIVITY_LOGS", "invalid index to delete: " + position);
+        }
     }
 }

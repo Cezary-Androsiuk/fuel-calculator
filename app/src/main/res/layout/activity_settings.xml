@@ -81,6 +81,17 @@
                 android:layout_height="wrap_content"
                 android:text="Export Application Data to Downloads" />
 
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="30dp" />
+            
+            <Switch
+                android:id="@+id/speedUpFormsForDebugSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Speed Up Forms For Debug"/>
+<!--                android:layoutDirection="rtl"-->
+            
 <!--            <View-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="30dp" />-->

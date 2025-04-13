@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -26,7 +28,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     static public final int RESULT_ERASE_APP_MEMORY = 38554;
 
-    static final boolean speedUpFormsForDebug = true;
+    static boolean speedUpFormsForDebug = true;
+    Switch speedUpFormsForDebugSwitch;
 
     ImageButton m_closeSettingsButton;
     Button m_eraseAppMemoryButton;
@@ -71,6 +74,14 @@ public class SettingsActivity extends AppCompatActivity {
         m_eraseAppMemoryButton = (Button) findViewById(R.id.eraseApplicationMemoryButton);
         m_eraseAppMemoryButton.setOnClickListener(v -> this.openEraseConfirmDialog());
 
+        speedUpFormsForDebugSwitch = findViewById(R.id.speedUpFormsForDebugSwitch);
+        speedUpFormsForDebugSwitch.setChecked(SettingsActivity.speedUpFormsForDebug);
+        speedUpFormsForDebugSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SettingsActivity.speedUpFormsForDebug = isChecked;
+            }
+        });
 
         ///  TEST STUFF
         findViewById(R.id.textStuffLayout).setVisibility(View.INVISIBLE);

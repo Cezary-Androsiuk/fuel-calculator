@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -90,7 +91,10 @@ public class FuelRecordRecyclerViewAdapter
                 ///  Set button ClickListener to open method in Main Activity
                 HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
                 MainActivity mainActivity = (MainActivity) context;
-                headerViewHolder.addNewRecordButton.setOnClickListener(v -> mainActivity.addNewRecord());
+                headerViewHolder.addNewRecordButton.setOnClickListener(v -> mainActivity.askIfAddNewRecord());
+
+                headerViewHolder.deleteNewestRecordButton.setVisibility(fuelRecordModels.size() > 1 ? View.VISIBLE : View.INVISIBLE);
+                headerViewHolder.deleteNewestRecordButton.setOnClickListener(v -> mainActivity.askIfDeleteRecord(0));
 
                 return;
             }
@@ -147,11 +151,13 @@ public class FuelRecordRecyclerViewAdapter
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         Button addNewRecordButton;
+        ImageButton deleteNewestRecordButton;
 
         public HeaderViewHolder(View headerView) {
             super(headerView);
 
             addNewRecordButton = headerView.findViewById(R.id.addNewRecordButton);
+            deleteNewestRecordButton = headerView.findViewById(R.id.deleteNewestRecordButton);
         }
     }
 
