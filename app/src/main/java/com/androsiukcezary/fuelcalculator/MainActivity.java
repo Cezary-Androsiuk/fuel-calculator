@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MAIN_ACTIVITY_LOGS", "FirstRecordModel");
             FuelRecordModel model = this.fuelRecordsModels.get(arraySize -1);
             FirstRecordModel firstRecordModel = (FirstRecordModel) model;
-//            firstRecordModel.setCurrentFuel(60);
+            firstRecordModel.setCurrentFuel(60);
             tmpBalance = firstRecordModel.getInitialPLNValue();
             tmpFuel = firstRecordModel.getCurrentFuel();
             tmpFuelPrice = firstRecordModel.getCurrentFuelPrice();
@@ -371,7 +371,8 @@ public class MainActivity extends AppCompatActivity {
                     {
                         Log.d("MAIN_ACTIVITY_LOGS", "lastEndTripRecordModel is null - first record");
                         double startFuel = startTripRecordModel.getCurrentFuel();
-                        double fuelUsedByOtherUser = tmpFuel - startFuel;
+                        double fuelUsedByOtherUser = 0.0 - startFuel;
+                        Log.w("MAIN_ACTIVITY_LOGS", "not finished, hard typed number");
                         Log.d("MAIN_ACTIVITY_LOGS", "fuelUsedByOtherUser: " + fuelUsedByOtherUser);
                         if(fuelUsedByOtherUser >= 0)
                         {
