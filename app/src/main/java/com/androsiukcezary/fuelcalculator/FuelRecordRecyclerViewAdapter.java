@@ -14,8 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androsiukcezary.fuelcalculator.data.EndTripRecordModel;
+import com.androsiukcezary.fuelcalculator.data.FirstRecordModel;
 import com.androsiukcezary.fuelcalculator.data.FuelRecordModel;
 import com.androsiukcezary.fuelcalculator.data.FuelRecordType;
+import com.androsiukcezary.fuelcalculator.data.PaymentRecordModel;
+import com.androsiukcezary.fuelcalculator.data.RefuelingRecordModel;
+import com.androsiukcezary.fuelcalculator.data.StartTripRecordModel;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -73,14 +80,14 @@ public class FuelRecordRecyclerViewAdapter
         else if(viewType == FuelRecordType.PaymentType.ordinal())
         {
             View paymentRecordView = inflater.inflate(R.layout.payment_record_row, parent, false);
-            return new RefuelingRecordViewHolder(paymentRecordView);
+            return new PaymentRecordViewHolder(paymentRecordView);
         }
         // else
         View view = inflater.inflate(R.layout.unknown_fuel_record_row, parent, false);
         return new UnknownRecordViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         try{
@@ -106,31 +113,73 @@ public class FuelRecordRecyclerViewAdapter
             if(frm.getFuelRecordType() == FuelRecordType.FirstRecordType) // holder instanceof FirstRecordViewHolder
             {
                 FirstRecordViewHolder firstRecordViewHolder = (FirstRecordViewHolder) holder;
-
+                FirstRecordModel firstRecordModel = (FirstRecordModel) frm;
+                firstRecordViewHolder.balanceTextView.setText(
+                        firstRecordViewHolder.balancePrefix +
+                                String.format("%.2f", firstRecordModel.getInitialPLNValue()) +
+                                "zł"
+                );
+                firstRecordViewHolder.fuelTextView.setText(
+                        firstRecordViewHolder.fuelPrefix +
+                                String.format("%.2f", firstRecordModel.getCurrentFuel()) +
+                                "L"
+                );
+                firstRecordViewHolder.fuelPriceTextView.setText(
+                        firstRecordViewHolder.fuelPricePrefix +
+                                String.format("%.2f", firstRecordModel.getCurrentFuelPrice()) +
+                                "zł"
+                );
                 return;
             }
             if(frm.getFuelRecordType() == FuelRecordType.StartTripType)
             {
                 StartTripRecordViewHolder startTripRecordViewHolder = (StartTripRecordViewHolder) holder;
-
+                StartTripRecordModel startTripRecordModel = (StartTripRecordModel) frm;
+                startTripRecordViewHolder.fuelTextView.setText(
+                        startTripRecordViewHolder.fuelPrefix +
+                                String.format("%.2f", startTripRecordModel.getCurrentFuel()) +
+                                "L"
+                );
                 return;
             }
             if(frm.getFuelRecordType() == FuelRecordType.EndTripType)
             {
                 EndTripRecordViewHolder endTripRecordViewHolder = (EndTripRecordViewHolder) holder;
+                EndTripRecordModel endTripRecordModel = (EndTripRecordModel) frm;
+                endTripRecordViewHolder.fuelTextView.setText(
+                        endTripRecordViewHolder.fuelPrefix +
+                                String.format("%.2f", endTripRecordModel.getCurrentFuel()) +
+                                "L"
+                );
 
                 return;
             }
             if(frm.getFuelRecordType() == FuelRecordType.RefuelingType)
             {
                 RefuelingRecordViewHolder refuelingRecordViewHolder = (RefuelingRecordViewHolder) holder;
-
+                RefuelingRecordModel refuelingRecordModel = (RefuelingRecordModel) frm;
+                refuelingRecordViewHolder.refueledQuantityTextView.setText(
+                        refuelingRecordViewHolder.refueledQuantityPrefix +
+                                String.format("%.2f", refuelingRecordModel.getRefueledQuantity()) +
+                                "L"
+                );
+                refuelingRecordViewHolder.fuelPriceTextView.setText(
+                        refuelingRecordViewHolder.fuelPricePrefix +
+                                String.format("%.2f", refuelingRecordModel.getFuelPrice()) +
+                                "zł"
+                );
                 return;
             }
             if(frm.getFuelRecordType() == FuelRecordType.PaymentType)
             {
                 PaymentRecordViewHolder paymentRecordViewHolder = (PaymentRecordViewHolder) holder;
+                PaymentRecordModel paymentRecordModel = (PaymentRecordModel) frm;
 
+                paymentRecordViewHolder.paymentTextView.setText(
+                        paymentRecordViewHolder.paymentPrefix +
+                                String.format("%.2f", paymentRecordModel.getMoneyPaid()) +
+                                "zł"
+                );
                 return;
             }
 
@@ -162,32 +211,70 @@ public class FuelRecordRecyclerViewAdapter
     }
 
     public static class FirstRecordViewHolder extends RecyclerView.ViewHolder{
+        TextView balanceTextView;
+        String balancePrefix;
+        TextView fuelTextView;
+        String fuelPrefix;
+        TextView fuelPriceTextView;
+        String fuelPricePrefix;
+
         public FirstRecordViewHolder(@NonNull View itemView) {
             super(itemView);
+            balanceTextView = itemView.findViewById(R.id.balanceTextView);
+            fuelTextView = itemView.findViewById(R.id.fuelTextView);
+            fuelPriceTextView = itemView.findViewById(R.id.fuelPriceTextView);
+
+            balancePrefix = String.valueOf(balanceTextView.getText());
+            fuelPrefix = String.valueOf(fuelTextView.getText());
+            fuelPricePrefix = String.valueOf(fuelPriceTextView.getText());
         }
     }
 
     public static class StartTripRecordViewHolder extends RecyclerView.ViewHolder{
+        TextView fuelTextView;
+        String fuelPrefix;
+
         public StartTripRecordViewHolder(@NonNull View itemView) {
             super(itemView);
+            fuelTextView = itemView.findViewById(R.id.fuelTextView);
+            fuelPrefix = String.valueOf(fuelTextView.getText());
         }
     }
 
     public static class EndTripRecordViewHolder extends RecyclerView.ViewHolder{
+        TextView fuelTextView;
+        String fuelPrefix;
         public EndTripRecordViewHolder(@NonNull View itemView) {
             super(itemView);
+            fuelTextView = itemView.findViewById(R.id.fuelTextView);
+            fuelPrefix = String.valueOf(fuelTextView.getText());
         }
     }
 
     public static class RefuelingRecordViewHolder extends RecyclerView.ViewHolder{
+        TextView refueledQuantityTextView;
+        String refueledQuantityPrefix;
+        TextView fuelPriceTextView;
+        String fuelPricePrefix;
+
         public RefuelingRecordViewHolder(@NonNull View itemView) {
             super(itemView);
+            refueledQuantityTextView = itemView.findViewById(R.id.refueledQuantityTextView);
+            fuelPriceTextView = itemView.findViewById(R.id.fuelPriceTextView);
+
+            refueledQuantityPrefix = String.valueOf(refueledQuantityTextView.getText());
+            fuelPricePrefix = String.valueOf(fuelPriceTextView.getText());
         }
     }
 
     public static class PaymentRecordViewHolder extends RecyclerView.ViewHolder{
+        TextView paymentTextView;
+        String paymentPrefix;
+
         public PaymentRecordViewHolder(@NonNull View itemView) {
             super(itemView);
+            paymentTextView = itemView.findViewById(R.id.paymentTextView);
+            paymentPrefix = String.valueOf(paymentTextView.getText());
         }
     }
 
