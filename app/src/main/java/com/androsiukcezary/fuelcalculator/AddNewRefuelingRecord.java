@@ -60,6 +60,12 @@ public class AddNewRefuelingRecord extends AppCompatActivity {
         );
 
         saveNewRefuelingButton.setOnClickListener(v -> this.onSaveNewRefuelingButtonClicked());
+
+        if(SettingsActivity.speedUpFormsForDebug)
+        {
+            refueledQuantityEditText.setText("10.0");
+            fuelPriceEditText.setText("5.80");
+        }
     }
 
     private void onSaveNewRefuelingButtonClicked(){

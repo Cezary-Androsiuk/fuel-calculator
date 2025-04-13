@@ -55,6 +55,11 @@ public class AddNewStartTripRecord extends AppCompatActivity {
 
         m_saveNewStartTripButton.setOnClickListener(v -> onSaveNewStartTripButtonClicked());
 
+        if(SettingsActivity.speedUpFormsForDebug)
+        {
+            m_currentFuelEditText.setText("0.0");
+        }
+
     }
 
     private void onSaveNewStartTripButtonClicked(){

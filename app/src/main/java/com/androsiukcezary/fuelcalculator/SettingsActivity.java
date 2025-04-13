@@ -26,6 +26,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     static public final int RESULT_ERASE_APP_MEMORY = 38554;
 
+    static final boolean speedUpFormsForDebug = true;
+
     ImageButton m_closeSettingsButton;
     Button m_eraseAppMemoryButton;
     Dialog m_eraseAppMemoryDialog;
@@ -71,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         ///  TEST STUFF
-//        findViewById(R.id.textStuffLayout).setVisibility(View.INVISIBLE);
+        findViewById(R.id.textStuffLayout).setVisibility(View.INVISIBLE);
         TextView fileExistStatusTextView = (TextView) findViewById(R.id.fileExistStatusTextView);
         File file = new File(getFilesDir(), "data.json");
         if (file.exists()) {

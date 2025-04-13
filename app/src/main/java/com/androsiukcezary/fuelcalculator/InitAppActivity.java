@@ -25,8 +25,6 @@ import java.util.Locale;
 
 public class InitAppActivity extends AppCompatActivity {
 
-    static final boolean m_disableActivityForDebug = true;
-
     EditText m_initialPLNValueEditText;
     EditText m_currentFuelEditText;
     EditText m_currentFuelPriceEditText;
@@ -81,7 +79,7 @@ public class InitAppActivity extends AppCompatActivity {
         ///  connect onClick function with save button
         m_saveInitDataButton.setOnClickListener(v -> this.onSaveInitDataButtonClicked());
 
-        if(m_disableActivityForDebug)
+        if(SettingsActivity.speedUpFormsForDebug)
         {
             m_initialPLNValueEditText.setText("0.0"); /// DEBUG
             m_currentFuelEditText.setText("0.0"); /// DEBUG

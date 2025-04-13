@@ -79,16 +79,16 @@
                 android:id="@+id/exportApplicationDataButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Export Application Data" />
+                android:text="Export Application Data to Downloads" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-            <Button
-                android:id="@+id/importApplicationDataButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Import Application Data" />
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="30dp" />-->
+<!--            <Button-->
+<!--                android:id="@+id/importApplicationDataButton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Import Application Data from Downloads" />-->
 
             <LinearLayout
                 android:id="@+id/textStuffLayout"

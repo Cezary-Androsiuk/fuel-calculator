@@ -54,6 +54,11 @@ public class AddNewPaymentRecord extends AppCompatActivity {
         );
 
         saveNewPaymentButton.setOnClickListener(v -> onSaveNewPaymentButtonClicked());
+
+        if(SettingsActivity.speedUpFormsForDebug)
+        {
+            moneyPaidEditText.setText("10.0");
+        }
     }
 
     private void onSaveNewPaymentButtonClicked(){

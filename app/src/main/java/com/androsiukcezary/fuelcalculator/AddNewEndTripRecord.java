@@ -59,6 +59,10 @@ public class AddNewEndTripRecord extends AppCompatActivity {
 
         m_saveNewEndTripButton.setOnClickListener(v -> onSaveNewEndTripButtonClicked());
 
+        if(SettingsActivity.speedUpFormsForDebug)
+        {
+            m_currentFuelEditText.setText("0.0");
+        }
     }
 
     private void onSaveNewEndTripButtonClicked(){
