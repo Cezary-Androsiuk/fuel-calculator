@@ -44,7 +44,8 @@ public class FuelRecordRecyclerViewAdapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (viewType == TYPE_HEADER) {
+        if (viewType == TYPE_HEADER)
+        {
             View headerView = inflater.inflate(R.layout.fuel_record_header_row, parent, false);
             return new HeaderViewHolder(headerView);
         }
@@ -128,7 +129,6 @@ public class FuelRecordRecyclerViewAdapter
 
                 return;
             }
-
 
             Log.i("FUEL_RECORD_RECYCLER_VIEW_ADAPTER_ACTIVITY_LOGS", "unknown Fuel Record Type");
             UnknownRecordViewHolder unknownRecordViewHolder = (UnknownRecordViewHolder) holder;
