@@ -346,29 +346,41 @@ public class MainActivity extends AppCompatActivity {
         try
         {
             ///  List should contain at first position FirstRecordModel
+            Log.d("MAIN_ACTIVITY_LOGS", "FirstRecordModel");
             FuelRecordModel model = this.fuelRecordsModels.get(arraySize -1);
             FirstRecordModel firstRecordModel = (FirstRecordModel) model;
+//            firstRecordModel.setCurrentFuel(60);
             tmpBalance = firstRecordModel.getInitialPLNValue();
             tmpFuel = firstRecordModel.getCurrentFuel();
             tmpFuelPrice = firstRecordModel.getCurrentFuelPrice();
 
             StartTripRecordModel lastStartTripRecordModel = null;
             EndTripRecordModel lastEndTripRecordModel = null;
-            for(int i=arraySize-1; i>=1; i--)
+            Log.d("MAIN_ACTIVITY_LOGS", "balance: " + tmpBalance + ", fuel: " + tmpFuel + ", fuelPrice: " + tmpFuelPrice);
+
+            for(int i=arraySize-2; i>=0; i--)
             {
                 model = this.fuelRecordsModels.get(i);
                 if(model instanceof StartTripRecordModel)
                 {
+                    Log.d("MAIN_ACTIVITY_LOGS", "StartTripRecordModel");
                     StartTripRecordModel startTripRecordModel = (StartTripRecordModel) model;
                     lastStartTripRecordModel = startTripRecordModel;
 
                     if(lastEndTripRecordModel == null)
                     {
-                        Log.i("MAIN_ACTIVITY_LOGS", "lastEndTripRecordModel is null - first record");
+                        Log.d("MAIN_ACTIVITY_LOGS", "lastEndTripRecordModel is null - first record");
                         double startFuel = startTripRecordModel.getCurrentFuel();
                         double fuelUsedByOtherUser = tmpFuel - startFuel;
-                        tmpBalance += fuelUsedByOtherUser * tmpFuelPrice;
-                        tmpFuel -= fuelUsedByOtherUser;
+                        Log.d("MAIN_ACTIVITY_LOGS", "fuelUsedByOtherUser: " + fuelUsedByOtherUser);
+                        if(fuelUsedByOtherUser >= 0)
+                        {
+                            tmpBalance += fuelUsedByOtherUser * tmpFuelPrice;
+                            tmpFuel -= fuelUsedByOtherUser;
+                        }
+                        else {
+                            Log.d("MAIN_ACTIVITY_LOGS", "used fuel < 0 - skipped");
+                        }
 
                     }
                     else
@@ -376,13 +388,22 @@ public class MainActivity extends AppCompatActivity {
                         double newStartFuel = startTripRecordModel.getCurrentFuel();
                         double lastEndFuel = lastEndTripRecordModel.getCurrentFuel();
                         double fuelUsedByOtherUser = newStartFuel - lastEndFuel;
-                        tmpBalance += fuelUsedByOtherUser * tmpFuelPrice;
-                        tmpFuel -= fuelUsedByOtherUser;
+                        Log.d("MAIN_ACTIVITY_LOGS", "fuelUsedByOtherUser: " + fuelUsedByOtherUser);
+                        if(fuelUsedByOtherUser >= 0)
+                        {
+                            tmpBalance += fuelUsedByOtherUser * tmpFuelPrice;
+                            tmpFuel -= fuelUsedByOtherUser;
+                        }
+                        else {
+                            Log.d("MAIN_ACTIVITY_LOGS", "used fuel < 0 - skipped");
+                        }
                     }
 
+                    Log.d("MAIN_ACTIVITY_LOGS", "balance: " + tmpBalance + ", fuel: " + tmpFuel + ", fuelPrice: " + tmpFuelPrice);
                 }
                 else if(model instanceof EndTripRecordModel)
                 {
+                    Log.d("MAIN_ACTIVITY_LOGS", "EndTripRecordModel");
                     EndTripRecordModel endTripRecordModel = (EndTripRecordModel) model;
                     lastEndTripRecordModel = endTripRecordModel;
 
@@ -395,10 +416,18 @@ public class MainActivity extends AppCompatActivity {
                     double startFuel = lastStartTripRecordModel.getCurrentFuel();
                     double endFuel = endTripRecordModel.getCurrentFuel();
                     double fuelUsedByMe = endFuel - startFuel;
-                    tmpFuel -= fuelUsedByMe;
+                    if(fuelUsedByMe >= 0)
+                    {
+                        tmpFuel -= fuelUsedByMe;
+                    }
+                    else {
+                        Log.d("MAIN_ACTIVITY_LOGS", "used fuel < 0 - skipped");
+                    }
+                    Log.d("MAIN_ACTIVITY_LOGS", "balance: " + tmpBalance + ", fuel: " + tmpFuel + ", fuelPrice: " + tmpFuelPrice);
                 }
                 else if(model instanceof RefuelingRecordModel)
                 {
+                    Log.d("MAIN_ACTIVITY_LOGS", "RefuelingRecordModel");
                     RefuelingRecordModel refuelingRecordModel = (RefuelingRecordModel) model;
                     double refuelQuantity = refuelingRecordModel.getRefueledQuantity();
                     double refuelPrice = refuelingRecordModel.getFuelPrice();
@@ -418,12 +447,15 @@ public class MainActivity extends AppCompatActivity {
                     {
                         tmpBalance -= refuelQuantity * refuelPrice;
                     }
+                    Log.d("MAIN_ACTIVITY_LOGS", "balance: " + tmpBalance + ", fuel: " + tmpFuel + ", fuelPrice: " + tmpFuelPrice);
 
                 }
                 else if(model instanceof PaymentRecordModel)
                 {
+                    Log.d("MAIN_ACTIVITY_LOGS", "PaymentRecordModel");
                     PaymentRecordModel paymentRecordModel = (PaymentRecordModel) model;
                     tmpBalance -= paymentRecordModel.getMoneyPaid();
+                    Log.d("MAIN_ACTIVITY_LOGS", "balance: " + tmpBalance + ", fuel: " + tmpFuel + ", fuelPrice: " + tmpFuelPrice);
                 }
             }
         }

@@ -60,6 +60,8 @@ public class AddNewStartTripRecord extends AppCompatActivity {
             m_currentFuelEditText.setText("0.0");
         }
 
+        ///  speedup inserting data
+        m_currentFuelEditText.requestFocus();
     }
 
     private void onSaveNewStartTripButtonClicked(){
