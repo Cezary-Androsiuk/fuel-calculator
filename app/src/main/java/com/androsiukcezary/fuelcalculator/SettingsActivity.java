@@ -32,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     static public final int RESULT_ERASE_APP_MEMORY = 38554;
 
-    static boolean speedUpFormsForDebug = true;
+    static boolean speedUpFormsForDebug = false;
     Switch speedUpFormsForDebugSwitch;
 
     ImageButton m_closeSettingsButton;

@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view3" />
 
     <TextView
-        android:id="@+id/currentBalanceInfoTextView"
+        android:id="@+id/currentBalanceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="@+id/view3" />
 
     <TextView
-        android:id="@+id/currentFuelInfoTextView"
+        android:id="@+id/currentFuelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -48,6 +48,18 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/view3"
         app:layout_constraintStart_toStartOf="@+id/view3" />
+
+    <TextView
+        android:id="@+id/currentFuelPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+
+        android:layout_marginBottom="8dp"
+        android:text="Fuel Price: "
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintStart_toEndOf="@+id/currentFuelTextView" />
 
     <ImageButton
         android:id="@+id/settingsButton"

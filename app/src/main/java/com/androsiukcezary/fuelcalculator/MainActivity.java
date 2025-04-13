@@ -52,10 +52,20 @@ public class MainActivity extends AppCompatActivity {
     FuelRecordRecyclerViewAdapter recyclerAdapter;
     ArrayList<FuelRecordModel> fuelRecordsModels = new ArrayList<>();
 
-    TextView currentBalanceInfoTextView;
-    String currentBalancePrefixText;
-    String currentBalancePostFix = "zł";
+    TextView currentBalanceTextView;
+    String currentBalancePrefix;
+    final String currentBalancePostfix = "zł";
     double currentBalance = 0.0;
+
+    TextView currentFuelTextView;
+    String currentFuelPrefix;
+    final String currentFuelPostfix = "L";
+    double currentFuel = 0.0;
+
+    TextView currentFuelPriceTextView;
+    String currentFuelPricePrefix;
+    final String currentFuelPricePostfix = "zł";
+    double currentFuelPrice = 0.0;
 
     ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
     ImageButton m_settingsButton;
@@ -98,8 +108,14 @@ public class MainActivity extends AppCompatActivity {
 
         this.initRecyclerView();
 
-        this.currentBalanceInfoTextView = (TextView) findViewById(R.id.currentBalanceInfoTextView);
-        this.currentBalancePrefixText = String.valueOf(currentBalanceInfoTextView.getText());
+        this.currentBalanceTextView = (TextView) findViewById(R.id.currentBalanceTextView);
+        this.currentBalancePrefix = String.valueOf(currentBalanceTextView.getText());
+
+        this.currentFuelTextView = (TextView) findViewById(R.id.currentFuelTextView);
+        this.currentFuelPrefix = String.valueOf(currentFuelTextView.getText());
+
+        this.currentFuelPriceTextView = (TextView) findViewById(R.id.currentFuelPriceTextView);
+        this.currentFuelPricePrefix = String.valueOf(currentFuelPriceTextView.getText());
 
         m_settingsButton = (ImageButton) findViewById(R.id.settingsButton);
         m_settingsButton.setOnClickListener(v -> this.openSettings());
@@ -281,53 +297,133 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i<this.fuelRecordsModels.size(); i++)
             Log.d("MAIN_ACTIVITY_LOGS", "useDataToStartAlreadyInitializedApplication" + fuelRecordsModels.get(i).toString());
 
-        this.updateCurrentBalance();
+        this.updateCurrentBalanceAndFuel();
     }
 
-    private void updateCurrentBalance(){
+    private void updateCurrentBalanceAndFuel(){
 
-        this.computeCurrentBalance();
+        this.computeCurrentBalanceAndFuel();
         this.updateCurrentBalanceText();
+        this.updateCurrentFuelText();
+        this.updateCurrentFuelPriceText();
     }
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void updateCurrentBalanceText(){
 
-        this.currentBalanceInfoTextView.setText(
-                this.currentBalancePrefixText +
+        this.currentBalanceTextView.setText(
+                this.currentBalancePrefix +
                         String.format("%.2f", currentBalance) +
-                        this. currentBalancePostFix);
+                        this. currentBalancePostfix);
     }
 
-    private void computeCurrentBalance(){
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    private void updateCurrentFuelText(){
+
+        this.currentFuelTextView.setText(
+                this.currentFuelPrefix +
+                        String.format("%.2f", currentFuel) +
+                        this. currentFuelPostfix);
+    }
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    private void updateCurrentFuelPriceText(){
+
+        this.currentFuelPriceTextView.setText(
+                this.currentFuelPricePrefix +
+                        String.format("%.2f", currentFuelPrice) +
+                        this. currentFuelPricePostfix);
+    }
+
+
+    private void computeCurrentBalanceAndFuel(){
         Log.i("MAIN_ACTIVITY_LOGS", "computeCurrentBalance");
         double tmpBalance = 0.0;
+        double tmpFuel = 0.0;
+        double tmpFuelPrice = 0.0;
+
+        int arraySize = this.fuelRecordsModels.size();
         try
         {
-            int arraySize = this.fuelRecordsModels.size();
-            for(int i=arraySize-1; i>=0; i--)
+            ///  List should contain at first position FirstRecordModel
+            FuelRecordModel model = this.fuelRecordsModels.get(arraySize -1);
+            FirstRecordModel firstRecordModel = (FirstRecordModel) model;
+            tmpBalance = firstRecordModel.getInitialPLNValue();
+            tmpFuel = firstRecordModel.getCurrentFuel();
+            tmpFuelPrice = firstRecordModel.getCurrentFuelPrice();
+
+            StartTripRecordModel lastStartTripRecordModel = null;
+            EndTripRecordModel lastEndTripRecordModel = null;
+            for(int i=arraySize-1; i>=1; i--)
             {
-                FuelRecordModel model = this.fuelRecordsModels.get(i);
-                if(model instanceof FirstRecordModel)
-                {
-                    FirstRecordModel firstRecordModel = (FirstRecordModel) model;
-//                firstRecordModel.get
-                }
-                else if(model instanceof StartTripRecordModel)
+                model = this.fuelRecordsModels.get(i);
+                if(model instanceof StartTripRecordModel)
                 {
                     StartTripRecordModel startTripRecordModel = (StartTripRecordModel) model;
+                    lastStartTripRecordModel = startTripRecordModel;
+
+                    if(lastEndTripRecordModel == null)
+                    {
+                        Log.i("MAIN_ACTIVITY_LOGS", "lastEndTripRecordModel is null - first record");
+                        double startFuel = startTripRecordModel.getCurrentFuel();
+                        double fuelUsedByOtherUser = tmpFuel - startFuel;
+                        tmpBalance += fuelUsedByOtherUser * tmpFuelPrice;
+                        tmpFuel -= fuelUsedByOtherUser;
+
+                    }
+                    else
+                    {
+                        double newStartFuel = startTripRecordModel.getCurrentFuel();
+                        double lastEndFuel = lastEndTripRecordModel.getCurrentFuel();
+                        double fuelUsedByOtherUser = newStartFuel - lastEndFuel;
+                        tmpBalance += fuelUsedByOtherUser * tmpFuelPrice;
+                        tmpFuel -= fuelUsedByOtherUser;
+                    }
+
                 }
                 else if(model instanceof EndTripRecordModel)
                 {
                     EndTripRecordModel endTripRecordModel = (EndTripRecordModel) model;
+                    lastEndTripRecordModel = endTripRecordModel;
+
+                    if(lastStartTripRecordModel == null)
+                    {
+                        Log.e("MAIN_ACTIVITY_LOGS", "lastStartTripRecordModel is null");
+                        continue;
+                    }
+
+                    double startFuel = lastStartTripRecordModel.getCurrentFuel();
+                    double endFuel = endTripRecordModel.getCurrentFuel();
+                    double fuelUsedByMe = endFuel - startFuel;
+                    tmpFuel -= fuelUsedByMe;
                 }
                 else if(model instanceof RefuelingRecordModel)
                 {
                     RefuelingRecordModel refuelingRecordModel = (RefuelingRecordModel) model;
+                    double refuelQuantity = refuelingRecordModel.getRefueledQuantity();
+                    double refuelPrice = refuelingRecordModel.getFuelPrice();
+                    boolean otherCarUserPays = refuelingRecordModel.isOtherCarUserPays();
+
+                    ///  update fuel price (in tank)
+                    double sumFuel = tmpFuel + refuelQuantity;
+                    double tmpFuelRatio = tmpFuel/sumFuel;
+                    double refuelQuantityRatio = refuelQuantity/sumFuel;
+                    tmpFuelPrice = refuelPrice * refuelQuantityRatio + tmpFuelPrice * tmpFuelRatio;
+
+                    ///  update fuel amount (in tank)
+                    tmpFuel += refuelQuantity;
+
+                    ///  update balance
+                    if(otherCarUserPays)
+                    {
+                        tmpBalance -= refuelQuantity * refuelPrice;
+                    }
+
                 }
                 else if(model instanceof PaymentRecordModel)
                 {
                     PaymentRecordModel paymentRecordModel = (PaymentRecordModel) model;
+                    tmpBalance -= paymentRecordModel.getMoneyPaid();
                 }
             }
         }
@@ -338,6 +434,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         currentBalance = tmpBalance;
+        currentFuel = tmpFuel;
+        currentFuelPrice = tmpFuelPrice;
     }
 
     public void askIfAddNewRecord(){
@@ -667,7 +765,7 @@ public class MainActivity extends AppCompatActivity {
         {
             fuelRecordsModels.add(0, model);
             recyclerAdapter.notifyItemInserted(0);
-            this.updateCurrentBalance();
+            this.updateCurrentBalanceAndFuel();
 
             this.saveFuelRecordsData();
         }
@@ -683,7 +781,7 @@ public class MainActivity extends AppCompatActivity {
         {
             fuelRecordsModels.remove(position);
             recyclerAdapter.notifyItemRemoved(position);
-            this.updateCurrentBalance();
+            this.updateCurrentBalanceAndFuel();
 
             this.saveFuelRecordsData();
         }
