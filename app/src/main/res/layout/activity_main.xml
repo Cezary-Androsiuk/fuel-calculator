@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,12 +30,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="Current balance: "
-        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:text="Balance: "
 
-        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/view3"
         app:layout_constraintTop_toTopOf="@+id/view3" />
+
+    <TextView
+        android:id="@+id/currentFuelInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="8dp"
+
+        android:text="Fuel: "
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="@+id/view3" />
 
     <ImageButton
         android:id="@+id/settingsButton"

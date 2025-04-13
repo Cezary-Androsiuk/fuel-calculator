@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView currentBalanceInfoTextView;
     String currentBalancePrefixText;
+    String currentBalancePostFix = "zł";
+    double currentBalance = 0.0;
 
     ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
     ImageButton m_settingsButton;
@@ -284,7 +286,58 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateCurrentBalance(){
 
-        this.currentBalanceInfoTextView.setText(this.currentBalancePrefixText + Double.toString(0.0));
+        this.computeCurrentBalance();
+        this.updateCurrentBalanceText();
+    }
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    private void updateCurrentBalanceText(){
+
+        this.currentBalanceInfoTextView.setText(
+                this.currentBalancePrefixText +
+                        String.format("%.2f", currentBalance) +
+                        this. currentBalancePostFix);
+    }
+
+    private void computeCurrentBalance(){
+        Log.i("MAIN_ACTIVITY_LOGS", "computeCurrentBalance");
+        double tmpBalance = 0.0;
+        try
+        {
+            int arraySize = this.fuelRecordsModels.size();
+            for(int i=arraySize-1; i>=0; i--)
+            {
+                FuelRecordModel model = this.fuelRecordsModels.get(i);
+                if(model instanceof FirstRecordModel)
+                {
+                    FirstRecordModel firstRecordModel = (FirstRecordModel) model;
+//                firstRecordModel.get
+                }
+                else if(model instanceof StartTripRecordModel)
+                {
+                    StartTripRecordModel startTripRecordModel = (StartTripRecordModel) model;
+                }
+                else if(model instanceof EndTripRecordModel)
+                {
+                    EndTripRecordModel endTripRecordModel = (EndTripRecordModel) model;
+                }
+                else if(model instanceof RefuelingRecordModel)
+                {
+                    RefuelingRecordModel refuelingRecordModel = (RefuelingRecordModel) model;
+                }
+                else if(model instanceof PaymentRecordModel)
+                {
+                    PaymentRecordModel paymentRecordModel = (PaymentRecordModel) model;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("MAIN_ACTIVITY_LOGS", "computeCurrentBalance failed: " + e);
+        }
+
+
+        currentBalance = tmpBalance;
     }
 
     public void askIfAddNewRecord(){
@@ -614,6 +667,7 @@ public class MainActivity extends AppCompatActivity {
         {
             fuelRecordsModels.add(0, model);
             recyclerAdapter.notifyItemInserted(0);
+            this.updateCurrentBalance();
 
             this.saveFuelRecordsData();
         }
@@ -629,6 +683,7 @@ public class MainActivity extends AppCompatActivity {
         {
             fuelRecordsModels.remove(position);
             recyclerAdapter.notifyItemRemoved(position);
+            this.updateCurrentBalance();
 
             this.saveFuelRecordsData();
         }
