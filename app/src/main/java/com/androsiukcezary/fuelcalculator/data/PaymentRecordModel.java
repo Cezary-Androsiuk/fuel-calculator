@@ -2,7 +2,9 @@ package com.androsiukcezary.fuelcalculator.data;
 
 import com.androsiukcezary.fuelcalculator.TimeDateDataSet;
 
-public class PaymentRecordModel extends FuelRecordModel{
+import java.io.Serializable;
+
+public class PaymentRecordModel extends FuelRecordModel implements Serializable {
     double moneyPaid;
 
     public PaymentRecordModel(
@@ -18,5 +20,13 @@ public class PaymentRecordModel extends FuelRecordModel{
 
     public void setMoneyPaid(double moneyPaid) {
         this.moneyPaid = moneyPaid;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentRecordModel{" +
+                "moneyPaid=" + moneyPaid +
+                ", " + super.toString() +
+                '}';
     }
 }

@@ -76,10 +76,21 @@
                 android:layout_height="30dp" />
 
             <Button
-                android:id="@+id/exportApplicationDataButton"
+                android:id="@+id/exportRawDataButtonToDownloads"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Export Application Data to Downloads" />
+                android:text="Export Raw Data to Downloads" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="30dp" />
+
+            <Button
+                android:id="@+id/exportJsonDataButtonToDownloads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Export JSON Data to Downloads" />
 
             <View
                 android:layout_width="wrap_content"

@@ -2,7 +2,9 @@ package com.androsiukcezary.fuelcalculator.data;
 
 import com.androsiukcezary.fuelcalculator.TimeDateDataSet;
 
-public class FirstRecordModel extends FuelRecordModel{
+import java.io.Serializable;
+
+public class FirstRecordModel extends FuelRecordModel implements Serializable {
     private double initialPLNValue;
     private double currentFuel;
     private double currentFuelPrice;
@@ -37,5 +39,15 @@ public class FirstRecordModel extends FuelRecordModel{
 
     public void setCurrentFuelPrice(double currentFuelPrice) {
         this.currentFuelPrice = currentFuelPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "FirstRecordModel{" +
+                "initialPLNValue=" + initialPLNValue +
+                ", currentFuel=" + currentFuel +
+                ", currentFuelPrice=" + currentFuelPrice +
+                ", " + super.toString() +
+                '}';
     }
 }

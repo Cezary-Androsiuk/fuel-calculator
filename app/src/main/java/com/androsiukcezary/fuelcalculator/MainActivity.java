@@ -2,6 +2,7 @@ package com.androsiukcezary.fuelcalculator;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -33,15 +35,25 @@ import com.androsiukcezary.fuelcalculator.data.PaymentRecordModel;
 import com.androsiukcezary.fuelcalculator.data.RefuelingRecordModel;
 import com.androsiukcezary.fuelcalculator.data.StartTripRecordModel;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    final public static String m_dataFilePath = "./data.txt";
+    final public static String dataFilePath = "fuelRecordsData.dat";
+    private Context context;
 
     FuelRecordRecyclerViewAdapter recyclerAdapter;
-    ArrayList<FuelRecordModel> fuelRecordModels = new ArrayList<>();
+    ArrayList<FuelRecordModel> fuelRecordsModels = new ArrayList<>();
+
+    TextView currentBalanceInfoTextView;
+    String currentBalancePrefixText;
 
     ActivityResultLauncher<Intent> m_settingsActivityResultLauncher;
     ImageButton m_settingsButton;
@@ -74,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         // if I only can handle double start InitAppActivity I will deal with something like "good user experience" XD
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        this.context = this.getApplicationContext();
+
         this.createSettingsActivityLoader();
         this.createAddNewStartTripActivityLoader();
         this.createAddNewEndTripActivityLoader();
@@ -82,8 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
         this.initRecyclerView();
 
+        this.currentBalanceInfoTextView = (TextView) findViewById(R.id.currentBalanceInfoTextView);
+        this.currentBalancePrefixText = String.valueOf(currentBalanceInfoTextView.getText());
+
         m_settingsButton = (ImageButton) findViewById(R.id.settingsButton);
         m_settingsButton.setOnClickListener(v -> this.openSettings());
+
+
 
         /// NOT WORKS
 //        if(!m_activityInitialized)
@@ -98,10 +117,12 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                readDataFile();
+                loadFuelRecordsData();
                 useDataToStartAlreadyInitializedApplication();
             }
         }
+
+
     }
 
     @Override
@@ -147,8 +168,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void eraseAppMemory(){
         ///  clear list of fuel records
+        this.fuelRecordsModels.clear();
 
         ///  delete data file
+        File file = new File(getFilesDir(), MainActivity.dataFilePath);
+        if (file.delete())
+        {
+            Log.i("MAIN_ACTIVITY_LOGS", "data file deleted");
+        }
+        else
+        {
+            Log.i("MAIN_ACTIVITY_LOGS", "deleting data file failed");
+        }
 
         ///  restart application to commit changes
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -165,9 +196,10 @@ public class MainActivity extends AppCompatActivity {
     ///
 
     private boolean isDataFileExit(){
+        Log.i("MAIN_ACTIVITY_LOGS", "isDataFileExit");
         // check if data file exit
-
-        return false; // temporary
+        File file = new File(context.getFilesDir(), MainActivity.dataFilePath);
+        return file.exists();
     }
 
     private void startInitAppActivity() {
@@ -231,16 +263,12 @@ public class MainActivity extends AppCompatActivity {
     ///
     /// MAIN ACTIVITY
     ///
-    private void readDataFile(){ ///  called before useDataToStartAlreadyInitializedApplication()
-        Log.i("MAIN_ACTIVITY_LOGS", "readDataFile");
-
-    }
 
     private void initRecyclerView(){
         RecyclerView mainRecyclerView = findViewById(R.id.mainRecyclerView);
 
         recyclerAdapter =
-                new FuelRecordRecyclerViewAdapter(this, fuelRecordModels);
+                new FuelRecordRecyclerViewAdapter(this, fuelRecordsModels);
         mainRecyclerView.setAdapter(recyclerAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager((((((((this)))))))));
     }
@@ -248,22 +276,15 @@ public class MainActivity extends AppCompatActivity {
     private void useDataToStartAlreadyInitializedApplication(){
         Log.i("MAIN_ACTIVITY_LOGS", "useDataToStartAlreadyInitializedApplication");
 
+        for(int i=0; i<this.fuelRecordsModels.size(); i++)
+            Log.d("MAIN_ACTIVITY_LOGS", "useDataToStartAlreadyInitializedApplication" + fuelRecordsModels.get(i).toString());
 
+        this.updateCurrentBalance();
+    }
 
-        ///  temporary create data to display
-//        int size = 50;
-//        double[] fromFuels = new double[size];
-//        for(int i=0; i<size; i++)
-//            fromFuels[size-i-1] = i* 3.0;
-//        double[] toFuels = new double[size];
-//        for(int i=0; i<size; i++)
-//            toFuels[size-i-1] = (i+1)* 3.0;
-//
-//        for(int i=0; i<size; i++)
-//        {
-//            m_fuelRecordModels.add( new FuelRecordModel(fromFuels[i], toFuels[i]) );
-//        }
+    private void updateCurrentBalance(){
 
+        this.currentBalanceInfoTextView.setText(this.currentBalancePrefixText + Double.toString(0.0));
     }
 
     public void askIfAddNewRecord(){
@@ -382,7 +403,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                             double currentFuel = data.getDoubleExtra("CURRENT_FUEL", -1.0);
                             TimeDateDataSet timeDataDataSet = (TimeDateDataSet) data.getSerializableExtra("TIME_DATA_DATA_SET");
-
                             addNewStartTripRecord(currentFuel, timeDataDataSet);
                         }
                         else if(o.getResultCode() == RESULT_CANCELED)
@@ -582,20 +602,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+    ///
+    ///  Following methods can be moved to FuelRecordsData class (if I want to extend that)
+    ///
+
     private void addFuelRecord(FuelRecordModel model){
-        fuelRecordModels.add(0, model);
-        recyclerAdapter.notifyItemInserted(0);
+        Log.i("MAIN_ACTIVITY_LOGS", "addFuelRecord");
+        try
+        {
+            fuelRecordsModels.add(0, model);
+            recyclerAdapter.notifyItemInserted(0);
+
+            this.saveFuelRecordsData();
+        }
+        catch (Exception e)
+        {
+            Log.e("MAIN_ACTIVITY_LOGS", "adding fuel record failed: " + e);
+        }
     }
 
     private void deleteFuelRecord(int position){
+        Log.i("MAIN_ACTIVITY_LOGS", "deleteFuelRecord");
         try
         {
-            fuelRecordModels.remove(position);
+            fuelRecordsModels.remove(position);
             recyclerAdapter.notifyItemRemoved(position);
+
+            this.saveFuelRecordsData();
         }
         catch (IndexOutOfBoundsException e)
         {
-            Log.i("MAIN_ACTIVITY_LOGS", "invalid index to delete: " + position);
+            Log.e("MAIN_ACTIVITY_LOGS", "invalid index to delete: " + position);
         }
+    }
+
+    private void saveFuelRecordsData(){
+        Log.i("MAIN_ACTIVITY_LOGS", "saveFuelRecordsData");
+        try (FileOutputStream fos = context.openFileOutput(MainActivity.dataFilePath, Context.MODE_PRIVATE);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+            oos.writeObject(this.fuelRecordsModels); // saved whole list
+            Log.d("MAIN_ACTIVITY_LOGS", "Saved " + this.fuelRecordsModels.size() + " records");
+        } catch (IOException e) {
+            Log.i("MAIN_ACTIVITY_LOGS", "saving data failed: " + e);
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void loadFuelRecordsData(){
+        Log.i("MAIN_ACTIVITY_LOGS", "loadFuelRecordsData");
+
+        ArrayList<FuelRecordModel> tmpRecordsModels = new ArrayList<>();
+        try (FileInputStream fis = context.openFileInput(MainActivity.dataFilePath);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+            tmpRecordsModels = (ArrayList<FuelRecordModel>) ois.readObject(); // read whole list
+            Log.d("MAIN_ACTIVITY_LOGS", "Read " + tmpRecordsModels.size() + " records");
+
+        } catch (IOException | ClassNotFoundException e) {
+            Log.e("MAIN_ACTIVITY_LOGS", "reading data failed: " + e);
+        }
+
+        // reassigned to prevent changing data set for recycle adapter
+        this.fuelRecordsModels.addAll(tmpRecordsModels);
+        recyclerAdapter.notifyDataSetChanged();
     }
 }

@@ -2,7 +2,9 @@ package com.androsiukcezary.fuelcalculator.data;
 
 import com.androsiukcezary.fuelcalculator.TimeDateDataSet;
 
-public class StartTripRecordModel extends FuelRecordModel{
+import java.io.Serializable;
+
+public class StartTripRecordModel extends FuelRecordModel implements Serializable {
     private double currentFuel;
 
     public StartTripRecordModel(double currentFuel, TimeDateDataSet timeDateDataSet) {
@@ -18,4 +20,11 @@ public class StartTripRecordModel extends FuelRecordModel{
         this.currentFuel = currentFuel;
     }
 
+    @Override
+    public String toString() {
+        return "StartTripRecordModel{" +
+                "currentFuel=" + currentFuel +
+                ", " + super.toString() +
+                '}';
+    }
 }

@@ -2,7 +2,9 @@ package com.androsiukcezary.fuelcalculator.data;
 
 import com.androsiukcezary.fuelcalculator.TimeDateDataSet;
 
-public abstract class FuelRecordModel {
+import java.io.Serializable;
+
+public abstract class FuelRecordModel implements Serializable {
 
     private FuelRecordType fuelRecordType;
 
@@ -23,5 +25,13 @@ public abstract class FuelRecordModel {
 
     public void setTimeDateDataSet(TimeDateDataSet timeDateDataSet) {
         this.timeDateDataSet = timeDateDataSet;
+    }
+
+    @Override
+    public String toString() {
+        return "FuelRecordModel{" +
+                "fuelRecordType=" + fuelRecordType +
+                ", timeDateDataSet=" + timeDateDataSet +
+                '}';
     }
 }

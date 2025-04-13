@@ -24,6 +24,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3" />
 
+    <TextView
+        android:id="@+id/currentBalanceInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="Current balance: "
+        android:textSize="16sp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="@+id/view3" />
+
     <ImageButton
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"

@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +23,10 @@ import androidx.core.view.WindowInsetsCompat;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -83,8 +87,12 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        ///  Export Data to Downloads
+        Button exportDataButtonToDownloads = (Button) findViewById(R.id.exportRawDataButtonToDownloads);
+        exportDataButtonToDownloads.setOnClickListener(v -> this.exportDataToDownloadsDirectory());
+
         ///  TEST STUFF
-        findViewById(R.id.textStuffLayout).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.textStuffLayout).setVisibility(View.INVISIBLE);
         TextView fileExistStatusTextView = (TextView) findViewById(R.id.fileExistStatusTextView);
         File file = new File(getFilesDir(), "data.json");
         if (file.exists()) {
@@ -189,6 +197,61 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void exportDataToDownloadsDirectory(){
+        Log.i("SETTINGS_ACTIVITY_LOGS", "exportDataToDownloadsDirectory");
+        File source = new File(getFilesDir(), MainActivity.dataFilePath); // Przykładowy plik z internal storage
+        File destination = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                MainActivity.dataFilePath
+        );
+
+        if(copyFileToDownloads(source, destination))
+        {
+            Log.i("SETTINGS_ACTIVITY_LOGS", "exporing to downlaods failed");
+            Toast.makeText(this, "Data downloaded", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Log.i("SETTINGS_ACTIVITY_LOGS", "exporing to downlaods failed");
+            Toast.makeText(this, "Exporting to downloads failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public boolean copyFileToDownloads(File sourceFile, File destinationFile) {
+        try {
+            if (!sourceFile.exists()) {
+                Log.e("COPY", "Plik źródłowy nie istnieje");
+                return false;
+            }
+
+            if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                Log.e("COPY", "Pamięć zewnętrzna niedostępna");
+                return false;
+            }
+
+            // Strumienie kopiowania
+            FileInputStream inStream = new FileInputStream(sourceFile);
+            FileOutputStream outStream = new FileOutputStream(destinationFile);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inStream.read(buffer)) > 0) {
+                outStream.write(buffer, 0, length);
+            }
+
+            // Zamknij strumienie
+            inStream.close();
+            outStream.close();
+
+            Log.d("COPY", "Skopiowano do: " + destinationFile.getAbsolutePath());
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private void openEraseConfirmDialog(){
